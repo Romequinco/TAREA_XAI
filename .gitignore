@@ -216,3 +216,21 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# --- Taller XAI crédito: datos y modelos pesados ---
+
+# Datos: todo ignorado salvo el .gitkeep de la carpeta
+data/*
+!data/.gitkeep
+
+# Formatos de datos y modelos pesados en cualquier carpeta
+*.csv
+*.parquet
+*.h5
+*.keras
+*.joblib
+*.pkl
+
+# Excepción: los entregables de predicciones de producción SÍ se versionan
+!results/predicciones/cs_produccion1.csv
+!results/predicciones/cs_produccion2.csv
