@@ -8,14 +8,48 @@ Documentación de soporte del Taller B4-T2 (XAI aplicado a concesión de crédit
 
 ## Fuentes
 
-- `_fuentes/` — material de clase, enunciado y notebook de partida del profesor (pendiente de añadir).
+- `_fuentes/` — material de clase, enunciado y notebook de partida del profesor (`taller_XAI.pdf`,
+  `XAI.pdf`, `AR_Multiarmed_Bandits.pdf`, `cs_construccion.csv`, `cs_produccion.csv`,
+  `DataDictionary.csv`, notebooks de ejercicio del profesor, etc. — ver `_fuentes/INVENTARIO.md`
+  para el detalle completo).
 
 ## Teoría
 
-Notas de teoría de soporte para la auditoría del modelo. Pendientes de redactar:
+Notas de teoría de soporte para la auditoría del modelo. Ya redactadas:
 
-- `teoria/shap.md` — SHAP (Shapley Additive exPlanations), valores globales y locales. *(pendiente)*
-- `teoria/contrafactuals.md` — análisis de contrafactuales para explicaciones de decisiones individuales. *(pendiente)*
-- `teoria/subrogados.md` — modelos subrogados interpretables (reglas) para aproximar el modelo principal. *(pendiente)*
-- `teoria/cost_sensitive.md` — aprendizaje sensible al coste, matrices de coste y optimización de umbral. *(pendiente)*
-- `teoria/bandits.md` — Multiarmed Bandits como alternativa al modelo supervisado. *(pendiente)*
+- [teoria/shap.md](teoria/shap.md) — SHAP (Shapley Additive exPlanations), valores globales y locales.
+- [teoria/contrafactuals.md](teoria/contrafactuals.md) — análisis de contrafactuales para explicaciones de decisiones individuales.
+- [teoria/subrogados.md](teoria/subrogados.md) — modelos subrogados interpretables (reglas) para aproximar el modelo principal.
+- [teoria/cost_sensitive.md](teoria/cost_sensitive.md) — aprendizaje sensible al coste, matrices de coste y optimización de umbral.
+- [teoria/bandits.md](teoria/bandits.md) — Multiarmed Bandits como alternativa al modelo supervisado.
+- [teoria/notebook_partida.md](teoria/notebook_partida.md) — estructura de los datos y patrón de trabajo heredado del notebook/ejercicios de partida del profesor.
+
+## Notebooks
+
+Pipeline de trabajo en `notebooks/`, ejecutado de forma incremental (01 → 07) y consolidado en un
+único notebook de entrega (`99_ENTREGA.ipynb`). Cada notebook documenta en su propia celda
+"Conectores" qué recibe del notebook anterior y qué entrega al siguiente.
+
+- `notebooks/01_EDA.ipynb` — análisis exploratorio de `cs_construccion.csv`/`cs_produccion.csv`
+  (target, nulos, outliers, distribuciones) para informar el preprocesado.
+- `notebooks/02_preprocesado.ipynb` — pipeline de preprocesado (imputación, outliers,
+  escalado/encoding) ajustado sobre train y aplicado a train/test/producción.
+- `notebooks/03_modelo_coste1.ipynb` — entrenamiento/optimización del modelo bajo el escenario de
+  coste FP = FN = 1; genera `cs_produccion1.csv`.
+- `notebooks/04_modelo_coste10.ipynb` — entrenamiento/optimización del modelo bajo el escenario de
+  coste FP = FN = 10; genera `cs_produccion2.csv`.
+- `notebooks/05_auditoria_subrogado.ipynb` — auditoría con modelo subrogado (árbol de decisión) que
+  aproxima cada modelo de caja negra y extrae reglas legibles.
+- `notebooks/06_contrafactuals.ipynb` — auditoría mediante análisis de contrafactuales sobre
+  ejemplos de clase real 0 y 1, en ambos escenarios de coste.
+- `notebooks/07_shap.ipynb` — auditoría mediante análisis SHAP global y local para ambos modelos de
+  coste.
+- `notebooks/99_ENTREGA.ipynb` — notebook único de entrega: consolida el trabajo de los 7 notebooks
+  anteriores (portada, objetivo, datos/EDA, preprocesado, ambos modelos, tabla comparativa de
+  resultados, las tres auditorías, decisiones de diseño y reflexión final).
+
+**Estado actual de los notebooks**: a fecha de este índice, los 8 notebooks de `notebooks/` son
+esqueletos con celdas de código marcadas `# TODO` (estructura, conectores y objetivos ya definidos,
+pero sin código ejecutado ni resultados reales todavía); `99_ENTREGA.ipynb` contiene además
+placeholders pendientes de sustituir (nombres/emails reales del grupo, tablas de resultados,
+reflexión final) antes de la entrega del 20 de julio de 2026.
