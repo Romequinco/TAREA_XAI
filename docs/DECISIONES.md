@@ -90,3 +90,46 @@ escenarios de coste del taller, sin necesidad de reentrenar un modelo distinto p
 - **Justificación:** pendiente de evidencia empírica sobre el trade-off rendimiento/explicabilidad
   en este dataset concreto.
 - **Estado:** ABIERTA
+
+**Evidencia encontrada (2026-07-04):** `notebooks/01_EDA.ipynb` (secciones 5-7) aporta varios
+indicios, ninguno concluyente por sí solo, de que las relaciones en este dataset no son puramente
+lineales. (1) Los tres pares de columnas `NumberOfTime*PastDue*` tienen correlación de Pearson muy
+alta (0.98-0.99) pero de Spearman mucho menor (0.25-0.32); el propio notebook razona que esa
+divergencia está probablemente inflada por ~188 filas con valores centinela compartidos (96/98),
+no por una relación monótona limpia en todo el rango — verificado repitiendo PCA/t-SNE/KernelPCA
+excluyendo esas filas (sección 7.4): la componente principal PC1 baja de ~30% a ~19% de varianza
+explicada y cambia de composición al excluirlas. (2) La sección 5.6 (información mutua) y la
+comparación PCA (lineal) vs t-SNE/KernelPCA (no lineal) de la sección 7 no muestran una separación
+de clases sustancialmente mejor bajo proyecciones no lineales que bajo PCA lineal — ambas muestran
+solapamiento considerable entre clases. Lectura tentativa: no hay evidencia fuerte de que una
+familia no lineal (árboles/red neuronal) capture estructura que un modelo lineal no pueda, pero
+tampoco hay evidencia de que el problema sea "limpiamente lineal" dado el efecto de los centinelas
+sin tratar y la multicolinealidad detectada por VIF (sección 5.5) entre las columnas `PastDue`.
+Esta evidencia es indirecta (viene de EDA, no de comparar modelos entrenados) y no cierra D-0.3;
+la decisión final debería apoyarse en el rendimiento real de cada familia una vez implementado
+`03_modelo_coste1.ipynb`/`04_modelo_coste10.ipynb`.
+
+### D-1.1 — Estrategia de imputación de nulos (`MonthlyIncome`, `NumberOfDependents`)
+
+- **Fecha:** 2026-07-04
+- **Alternativas consideradas:**
+  - Imputación simple por mediana global (una única mediana para toda la columna).
+  - Imputación por mediana agrupada (por ejemplo, por tramo de edad para `MonthlyIncome`).
+  - Añadir una variable indicadora binaria de "era nulo" además de imputar.
+  - Eliminar las filas con nulos (descartado de entrada: afectaría al 19.8% del dataset por
+    `MonthlyIncome`).
+- **Justificación:** `notebooks/01_EDA.ipynb` (sección 8) aporta evidencia empírica real, no solo
+  supuestos: (1) la tasa de positivos del target difiere entre clientes con y sin `MonthlyIncome`
+  nulo, y un test estadístico formal (sección 8.6, regresión logística controlando por edad)
+  confirma que el patrón de nulos no es puramente aleatorio (MCAR) respecto al target una vez
+  controlado por edad — es decir, la ausencia de dato es en sí misma parcialmente informativa.
+  (2) La mediana de `MonthlyIncome` varía con la edad (sección 8.4), lo que apoya imputar por
+  grupo de edad en vez de con una única mediana global. (3) `DebtRatio` muestra valores atípicos
+  cuando `MonthlyIncome` es nulo (sección 8.2), coherente con la hipótesis de que en esos casos
+  `DebtRatio` pueda estar mal definido o capturar otra magnitud. (4) El patrón de nulos de
+  `NumberOfDependents` (2.6%) se comportó de forma más cercana a aleatoria en el cruce con edad y
+  target (sección 8.3), por lo que una imputación simple (mediana o 0) parece suficiente ahí.
+  La tabla `results/tables/08_recomendacion_imputacion_nulos.csv` (y la fila correspondiente de
+  `results/tables/eda_resumen.csv`) recoge la recomendación consolidada por columna.
+- **Estado:** ABIERTA (la implementación real corresponde a `02_preprocesado.ipynb`; esta decisión
+  queda registrada con la evidencia del EDA para que se confirme o ajuste al implementar).

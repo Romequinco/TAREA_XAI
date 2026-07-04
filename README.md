@@ -64,6 +64,41 @@ Además de construir y optimizar el modelo, se debe auditar mediante:
 - `99_ENTREGA.ipynb`: notebook único consolidado que se entrega, con el código final, la
   justificación de los desarrollos, las tablas de resultados y la reflexión final.
 
+## Estado actual
+
+- **Documentación**: síntesis de teoría completa en `docs/teoria/` (SHAP, contrafactuales,
+  subrogados, coste/umbral, bandits, notebook de partida del profesor), citando siempre la fuente
+  en `docs/_fuentes/`. Decisiones de diseño registradas en `docs/DECISIONES.md` (D-0.1 a D-0.3
+  siguen ABIERTAS a la espera de evidencia empírica del modelado real).
+- **Notebooks**: `01_EDA.ipynb` tiene el análisis exploratorio completo, ejecutado de principio a
+  fin (carga/validación, EDA básico, valores centinela y outliers, EDA avanzado con comparación
+  train/producción, correlaciones, PCA lineal y no lineal, recomendaciones de nulos y
+  normalización, conclusiones), con figuras y tablas reales en `results/figures/` y
+  `results/tables/`. Los notebooks `02`–`07` y `99_ENTREGA.ipynb` son esqueletos (estructura,
+  conectores y decisiones ya definidos, código pendiente de implementar).
+
 ## Cómo ejecutar
 
-_(Pendiente de completar cuando el pipeline esté implementado)._
+```bash
+python -m venv .venv
+.venv\Scripts\activate       # Windows; en Linux/Mac: source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+Para trabajar de forma interactiva:
+
+```bash
+jupyter notebook notebooks/01_EDA.ipynb
+```
+
+Para ejecutar un notebook de principio a fin desde la terminal (como se hizo para `01_EDA.ipynb`,
+regenerando sus resultados en `results/`):
+
+```bash
+cd notebooks
+jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=600 01_EDA.ipynb
+```
+
+Los datos reales del taller (`cs_construccion.csv`, `cs_produccion.csv`, `DataDictionary.csv`) se
+copian a `data/` desde `docs/_fuentes/` (no versionados, ver `.gitignore`); los notebooks los leen
+con rutas relativas del tipo `../data/cs_construccion.csv`.

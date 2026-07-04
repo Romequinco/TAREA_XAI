@@ -10,8 +10,9 @@ Documentación de soporte del Taller B4-T2 (XAI aplicado a concesión de crédit
 
 - `_fuentes/` — material de clase, enunciado y notebook de partida del profesor (`taller_XAI.pdf`,
   `XAI.pdf`, `AR_Multiarmed_Bandits.pdf`, `cs_construccion.csv`, `cs_produccion.csv`,
-  `DataDictionary.csv`, notebooks de ejercicio del profesor, etc. — ver `_fuentes/INVENTARIO.md`
-  para el detalle completo).
+  `DataDictionary.csv`, notebooks de ejercicio del profesor incluido `ejercicio3_clustering.ipynb`
+  (XAI en clustering, añadido después del inventario inicial, pendiente de revisión profunda),
+  etc. — ver `_fuentes/INVENTARIO.md` para el detalle completo).
 
 ## Teoría
 

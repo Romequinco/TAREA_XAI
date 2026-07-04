@@ -237,3 +237,7 @@ data/*
 
 # Excepción: tablas de resultados de análisis (EDA, etc.) SÍ se versionan
 !results/tables/*.csv
+
+# Excepción explícita (documentación, no hay regla que lo excluya): el enunciado
+# oficial de la práctica SÍ se versiona
+!/taller_XAI.pdf
