@@ -1,0 +1,12 @@
+,dtype_train,dtype_prod,coinciden
+SeriousDlqin2yrs,int64,float64,False
+RevolvingUtilizationOfUnsecuredLines,float64,float64,True
+age,int64,int64,True
+NumberOfTime30-59DaysPastDueNotWorse,int64,int64,True
+DebtRatio,float64,float64,True
+MonthlyIncome,float64,float64,True
+NumberOfOpenCreditLinesAndLoans,int64,int64,True
+NumberOfTimes90DaysLate,int64,int64,True
+NumberRealEstateLoansOrLines,int64,int64,True
+NumberOfTime60-89DaysPastDueNotWorse,int64,int64,True
+NumberOfDependents,float64,float64,True

@@ -1,0 +1,5 @@
+,age,age,DebtRatio,DebtRatio,MonthlyIncome,MonthlyIncome,RevolvingUtilizationOfUnsecuredLines,RevolvingUtilizationOfUnsecuredLines
+,median,mean,median,mean,median,mean,median,mean
+SeriousDlqin2yrs,,,,,,,,
+0,52.0,52.67983915413035,0.3624828165,357.75221688460084,5457.0,6774.255665207012,0.133898991,6.231422702816629
+1,45.0,45.824023938444,0.4238058885,304.0144561667851,4500.0,5716.441797140912,0.8418448945,4.967917378619834

@@ -1,0 +1,11 @@
+,variable,VIF
+0,NumberOfTime60-89DaysPastDueNotWorse,92.30372799960287
+1,NumberOfTimes90DaysLate,73.68075444588432
+2,NumberOfTime30-59DaysPastDueNotWorse,41.285570107936856
+3,NumberOfOpenCreditLinesAndLoans,1.285608215336677
+4,NumberRealEstateLoansOrLines,1.2724299914859356
+5,age,1.0854544758614355
+6,NumberOfDependents,1.0800156773523737
+7,DebtRatio,1.020237343922813
+8,MonthlyIncome,1.0181620036378702
+9,RevolvingUtilizationOfUnsecuredLines,1.0006218169623133

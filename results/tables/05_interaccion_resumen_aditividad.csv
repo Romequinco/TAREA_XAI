@@ -1,0 +1,3 @@
+,var_x,var_y,bin_x_max,bin_y_max,tasa_observada_pct,tasa_esperada_aditiva_pct,diferencia_pct
+0,RevolvingUtilizationOfUnsecuredLines,age,"(0.531, 10.008]","(-0.001, 39.0]",22.2556802627977,23.718594082231732,-1.462913819434032
+1,DebtRatio,NumberOfDependents,"(0.383, 1.609]","(2.0, 13.0]",13.274745605920444,12.386088613427853,0.8886569924925904

@@ -1,0 +1,5 @@
+,criterio,n_filas,pct_filas,tasa_target_pct
+0,Outliers Isolation Forest (total),1050,1.0,52.0
+1,Solapan con criterio univariante/bivariante (3.1-3.3),369,0.3514,40.3794
+2,Solo detectados por Isolation Forest (sin marca univariante previa),681,0.6486,58.2966
+3,Resto del dataset (no marcado como outlier Isolation Forest),103950,99.0,6.2261

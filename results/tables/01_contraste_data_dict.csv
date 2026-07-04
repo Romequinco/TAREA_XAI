@@ -1,0 +1,12 @@
+,columna_df_train,en_data_dict,en_df_prod
+0,DebtRatio,True,True
+1,MonthlyIncome,True,True
+2,NumberOfDependents,True,True
+3,NumberOfOpenCreditLinesAndLoans,True,True
+4,NumberOfTime30-59DaysPastDueNotWorse,True,True
+5,NumberOfTime60-89DaysPastDueNotWorse,True,True
+6,NumberOfTimes90DaysLate,True,True
+7,NumberRealEstateLoansOrLines,True,True
+8,RevolvingUtilizationOfUnsecuredLines,True,True
+9,SeriousDlqin2yrs,True,True
+10,age,True,True

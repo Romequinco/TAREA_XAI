@@ -9,3 +9,4 @@ dice-ml
 xgboost
 lightgbm
 joblib
+statsmodels

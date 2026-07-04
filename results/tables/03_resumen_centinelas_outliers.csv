@@ -1,0 +1,6 @@
+,hallazgo,n_filas,pct_filas,recomendacion
+0,NumberOfTime*PastDue* == 98 simultaneo en las 3 columnas,185,0.1762,tratar como centinela/missing (no como 98 incidencias reales)
+1,NumberOfTime*PastDue* == 96 simultaneo en las 3 columnas,3,0.0029,tratar como centinela/missing (no como 96 incidencias reales)
+2,age == 0 (edad invalida),1,0.001,tratar como missing e imputar (p. ej. mediana de age)
+3,RevolvingUtilizationOfUnsecuredLines > 2 (fuera de rango logico de un ratio),261,0.2486,outlier: winsorizar/capar o crear flag en 02_preprocesado
+4,DebtRatio > percentil 97.5 con MonthlyIncome nulo o <=1 (posible artefacto de calculo),2625,2.5,outlier/artefacto: tratar junto con la imputacion de MonthlyIncome (D-1.1)

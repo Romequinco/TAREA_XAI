@@ -1,0 +1,3 @@
+variable,min_original,max_original,min_standard,max_standard,pct_dentro_pm1_standard,min_robust,max_robust,pct_dentro_pm1_robust
+RevolvingUtilizationOfUnsecuredLines,0.0,22198.0,-0.0282,101.947,99.8514,-0.2912,41793.8307,79.4905
+DebtRatio,0.0,329664.0,-0.1771,164.7006,94.619,-0.5274,474809.99,77.0105

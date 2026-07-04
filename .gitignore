@@ -234,3 +234,6 @@ data/*
 # Excepción: los entregables de predicciones de producción SÍ se versionan
 !results/predicciones/cs_produccion1.csv
 !results/predicciones/cs_produccion2.csv
+
+# Excepción: tablas de resultados de análisis (EDA, etc.) SÍ se versionan
+!results/tables/*.csv

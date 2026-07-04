@@ -48,8 +48,14 @@ Pipeline de trabajo en `notebooks/`, ejecutado de forma incremental (01 → 07) 
   anteriores (portada, objetivo, datos/EDA, preprocesado, ambos modelos, tabla comparativa de
   resultados, las tres auditorías, decisiones de diseño y reflexión final).
 
-**Estado actual de los notebooks**: a fecha de este índice, los 8 notebooks de `notebooks/` son
-esqueletos con celdas de código marcadas `# TODO` (estructura, conectores y objetivos ya definidos,
-pero sin código ejecutado ni resultados reales todavía); `99_ENTREGA.ipynb` contiene además
-placeholders pendientes de sustituir (nombres/emails reales del grupo, tablas de resultados,
-reflexión final) antes de la entrega del 20 de julio de 2026.
+**Estado actual de los notebooks**: `notebooks/01_EDA.ipynb` ya NO es un esqueleto: tiene el EDA
+completo implementado y ejecutado de principio a fin sin errores (carga y validación de datos,
+EDA básico, centinelas/outliers de codificación, EDA avanzado con comparación train vs
+producción, correlaciones, PCA lineal, reducción de dimensionalidad no lineal, recomendación de
+tratamiento de nulos, recomendación de normalización/escalado y conclusiones con la tabla
+resumen `eda_resumen` guardada), y genera resultados reales en `results/figures/` y
+`results/tables/`. Los 7 notebooks restantes de `notebooks/` siguen siendo esqueletos con celdas
+de código marcadas `# TODO` (estructura, conectores y objetivos ya definidos, pero sin código
+ejecutado ni resultados reales todavía); `99_ENTREGA.ipynb` contiene además placeholders
+pendientes de sustituir (nombres/emails reales del grupo, tablas de resultados, reflexión final)
+antes de la entrega del 20 de julio de 2026.

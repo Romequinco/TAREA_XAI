@@ -1,0 +1,11 @@
+,columna,tipo,dtype,n_valores_unicos
+0,RevolvingUtilizationOfUnsecuredLines,continua,float64,88641
+3,DebtRatio,continua,float64,82384
+4,MonthlyIncome,continua,float64,12062
+1,age,continua,int64,86
+5,NumberOfOpenCreditLinesAndLoans,discreta/conteo,int64,57
+7,NumberRealEstateLoansOrLines,discreta/conteo,int64,27
+6,NumberOfTimes90DaysLate,discreta/conteo,int64,17
+2,NumberOfTime30-59DaysPastDueNotWorse,discreta/conteo,int64,14
+9,NumberOfDependents,discreta/conteo,float64,12
+8,NumberOfTime60-89DaysPastDueNotWorse,discreta/conteo,int64,11
