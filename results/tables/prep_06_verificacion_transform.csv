@@ -1,0 +1,14 @@
+assert,descripcion,resultado
+A,recarga joblib reproduce transform(test) identico (atol=0),OK
+A,pipe2 es PreprocesadorCredito fiteado (escalar/recalc/winsor=True),OK
+A,train.parquet[12 features] == transform fresco del pipe recargado (atol=0),OK
+B,columnas train==test==prod (features+flags),OK
+B,"dtypes: 10 float64 + 2 int8, iguales train vs prod",OK
+C,sin NaN en features de train/test/prod,OK
+D,prod=45000 ; train+test=105000 ; test==len(X_test),OK
+E,transform por lote == fila-a-fila (atol=1e-12) -> apatrida,OK
+F,scaler_.mean_ == media train post-log1p ; media(train)~0 ; media(test)!=0,OK
+G,transform(prod[perm]) == transform(prod)[perm] (atol=1e-12),OK
+H,prod finito ; Revolving>=cap recortada a cap train (1.1029),OK
+I,columnas en disco == esquema declarado (train/test/prod),OK
+I,id_fila_original en disco es permutacion exacta de range(45000) ; prod=45000 filas,OK

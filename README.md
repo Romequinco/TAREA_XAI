@@ -46,21 +46,25 @@ Además de construir y optimizar el modelo, se debe auditar mediante:
 ├── data/                  # Datos del taller (no versionados, ver .gitignore)
 ├── notebooks/             # Notebooks de trabajo 01-07 y notebook de entrega 99_ENTREGA.ipynb
 ├── src/                   # Código fuente reutilizable
-│   ├── preprocessing.py   # Pipeline de preprocesado fit/transform
-│   ├── modeling.py        # Entrenamiento y evaluación de modelos
-│   ├── cost_utils.py      # Matrices de coste, coste esperado, optimización de umbral
-│   └── xai_utils.py       # Wrappers de SHAP, modelo subrogado y contrafactuales
+│   ├── preprocessing.py   # Pipeline de preprocesado fit/transform (IMPLEMENTADO)
+│   ├── modeling.py        # Entrenamiento y evaluación de modelos (stub, pendiente)
+│   ├── cost_utils.py      # Matrices de coste, coste esperado, optimización de umbral (stub, pendiente)
+│   └── xai_utils.py       # Wrappers de SHAP, modelo subrogado y contrafactuales (stub, pendiente)
+├── data/
+│   └── processed/         # Salidas del preprocesado: train/test/produccion.parquet (generados)
 ├── results/               # Resultados generados
-│   ├── figures/           # Gráficas
-│   ├── tables/            # Tablas de resultados
+│   ├── figures/           # Gráficas (incluye prep_*.png del preprocesado)
+│   ├── tables/            # Tablas de resultados (incluye prep_*.csv del preprocesado)
+│   ├── models/            # Artefactos serializados (preprocessing_pipeline.joblib)
 │   └── predicciones/      # cs_produccion1.csv y cs_produccion2.csv (entregables, sí versionados)
 └── report/                # Material auxiliar para el informe/entrega final
 ```
 
 ### Convención de notebooks
 
-- `01`–`07`: notebooks de trabajo, exploración y desarrollo incremental (uno por bloque temático:
-  EDA, preprocesado, modelado, coste, subrogado, contrafactuales, SHAP, etc.).
+- `01`–`07`: notebooks de trabajo, exploración y desarrollo incremental, uno por bloque temático:
+  `01` EDA, `02` preprocesado, `03` modelo coste 1, `04` modelo coste 10, `05` auditoría subrogado,
+  `06` contrafactuales, `07` SHAP.
 - `99_ENTREGA.ipynb`: notebook único consolidado que se entrega, con el código final, la
   justificación de los desarrollos, las tablas de resultados y la reflexión final.
 
@@ -68,14 +72,19 @@ Además de construir y optimizar el modelo, se debe auditar mediante:
 
 - **Documentación**: síntesis de teoría completa en `docs/teoria/` (SHAP, contrafactuales,
   subrogados, coste/umbral, bandits, notebook de partida del profesor), citando siempre la fuente
-  en `docs/_fuentes/`. Decisiones de diseño registradas en `docs/DECISIONES.md` (D-0.1 a D-0.3
-  siguen ABIERTAS a la espera de evidencia empírica del modelado real).
-- **Notebooks**: `01_EDA.ipynb` tiene el análisis exploratorio completo, ejecutado de principio a
-  fin (carga/validación, EDA básico, valores centinela y outliers, EDA avanzado con comparación
-  train/producción, correlaciones, PCA lineal y no lineal, recomendaciones de nulos y
-  normalización, conclusiones), con figuras y tablas reales en `results/figures/` y
-  `results/tables/`. Los notebooks `02`–`07` y `99_ENTREGA.ipynb` son esqueletos (estructura,
-  conectores y decisiones ya definidos, código pendiente de implementar).
+  en `docs/_fuentes/`. Decisiones de diseño registradas en `docs/DECISIONES.md`: D-0.1 a D-0.3
+  siguen ABIERTAS a la espera de evidencia empírica del modelado real (notebooks `03`/`04`); el
+  bloque de preprocesado D-1.1 a D-1.6 (imputación, outliers/recálculo de DebtRatio, `age == 0`,
+  split, escalado y duplicados) quedó CERRADO tras implementar el `02`.
+- **Notebooks**: `01_EDA.ipynb` y `02_preprocesado.ipynb` están completos y ejecutados de principio
+  a fin sin errores. El `01` tiene el análisis exploratorio (carga/validación, EDA básico, valores
+  centinela y outliers, EDA avanzado con comparación train/producción, correlaciones, PCA lineal y
+  no lineal, recomendaciones de nulos y normalización, conclusiones). El `02` construye el pipeline
+  de preprocesado (`src/preprocessing.py`) y deja sus artefactos: `data/processed/train.parquet`,
+  `test.parquet` y `produccion.parquet`, más `results/models/preprocessing_pipeline.joblib` (y
+  tablas `prep_*.csv` / figuras `prep_*.png`). Los notebooks `03`–`07` y `99_ENTREGA.ipynb` siguen
+  siendo esqueletos con celdas `# TODO` (estructura, conectores y decisiones ya definidos, código
+  pendiente de implementar).
 
 ## Cómo ejecutar
 
@@ -91,14 +100,24 @@ Para trabajar de forma interactiva:
 jupyter notebook notebooks/01_EDA.ipynb
 ```
 
-Para ejecutar un notebook de principio a fin desde la terminal (como se hizo para `01_EDA.ipynb`,
-regenerando sus resultados en `results/`):
+Para ejecutar un notebook de principio a fin desde la terminal, regenerando sus resultados en
+`results/`. **Atención a la convención de rutas, que difiere entre notebooks:**
 
-```bash
-cd notebooks
-jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=600 01_EDA.ipynb
-```
+- `01_EDA.ipynb` asume `cwd = notebooks/` y lee los datos con rutas `../data/...`. Se ejecuta
+  entrando en la carpeta:
+
+  ```bash
+  cd notebooks
+  jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=600 01_EDA.ipynb
+  ```
+
+- `02_preprocesado.ipynb` asume `cwd = raíz del repo` y usa rutas `data/...`, `results/...` (sin
+  `../`). Incluye una guarda que hace `os.chdir("..")` si el kernel arranca en `notebooks/`, así que
+  se puede lanzar directamente desde la raíz:
+
+  ```bash
+  jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=600 notebooks/02_preprocesado.ipynb
+  ```
 
 Los datos reales del taller (`cs_construccion.csv`, `cs_produccion.csv`, `DataDictionary.csv`) se
-copian a `data/` desde `docs/_fuentes/` (no versionados, ver `.gitignore`); los notebooks los leen
-con rutas relativas del tipo `../data/cs_construccion.csv`.
+copian a `data/` desde `docs/_fuentes/` (no versionados, ver `.gitignore`).

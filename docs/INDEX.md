@@ -33,8 +33,9 @@ Pipeline de trabajo en `notebooks/`, ejecutado de forma incremental (01 → 07) 
 
 - `notebooks/01_EDA.ipynb` — análisis exploratorio de `cs_construccion.csv`/`cs_produccion.csv`
   (target, nulos, outliers, distribuciones) para informar el preprocesado.
-- `notebooks/02_preprocesado.ipynb` — pipeline de preprocesado (imputación, outliers,
-  escalado/encoding) ajustado sobre train y aplicado a train/test/producción.
+- `notebooks/02_preprocesado.ipynb` — pipeline de preprocesado (split estratificado, imputación,
+  recálculo de DebtRatio, winsorización y escalado) ajustado solo sobre train y aplicado a
+  train/test/producción; serializa el pipeline y deja los `.parquet` de salida.
 - `notebooks/03_modelo_coste1.ipynb` — entrenamiento/optimización del modelo bajo el escenario de
   coste FP = FN = 1; genera `cs_produccion1.csv`.
 - `notebooks/04_modelo_coste10.ipynb` — entrenamiento/optimización del modelo bajo el escenario de
@@ -49,14 +50,23 @@ Pipeline de trabajo en `notebooks/`, ejecutado de forma incremental (01 → 07) 
   anteriores (portada, objetivo, datos/EDA, preprocesado, ambos modelos, tabla comparativa de
   resultados, las tres auditorías, decisiones de diseño y reflexión final).
 
-**Estado actual de los notebooks**: `notebooks/01_EDA.ipynb` ya NO es un esqueleto: tiene el EDA
-completo implementado y ejecutado de principio a fin sin errores (carga y validación de datos,
-EDA básico, centinelas/outliers de codificación, EDA avanzado con comparación train vs
-producción, correlaciones, PCA lineal, reducción de dimensionalidad no lineal, recomendación de
-tratamiento de nulos, recomendación de normalización/escalado y conclusiones con la tabla
-resumen `eda_resumen` guardada), y genera resultados reales en `results/figures/` y
-`results/tables/`. Los 7 notebooks restantes de `notebooks/` siguen siendo esqueletos con celdas
-de código marcadas `# TODO` (estructura, conectores y objetivos ya definidos, pero sin código
-ejecutado ni resultados reales todavía); `99_ENTREGA.ipynb` contiene además placeholders
-pendientes de sustituir (nombres/emails reales del grupo, tablas de resultados, reflexión final)
-antes de la entrega del 20 de julio de 2026.
+**Estado actual de los notebooks**: `notebooks/01_EDA.ipynb` y `notebooks/02_preprocesado.ipynb`
+ya NO son esqueletos: ambos están implementados y ejecutados de principio a fin sin errores.
+
+- `01_EDA.ipynb` tiene el EDA completo (carga y validación de datos, EDA básico,
+  centinelas/outliers de codificación, EDA avanzado con comparación train vs producción,
+  correlaciones, PCA lineal, reducción de dimensionalidad no lineal, recomendación de tratamiento
+  de nulos, recomendación de normalización/escalado y conclusiones con la tabla resumen
+  `eda_resumen` guardada), con resultados reales en `results/figures/` y `results/tables/`.
+- `02_preprocesado.ipynb` construye el pipeline de preprocesado: split estratificado train/test,
+  imputación por tramo de edad más flags de missingness, recálculo de DebtRatio, winsorización,
+  `log1p` + `StandardScaler` parametrizable por flag, y verificación anti-fuga mediante `assert`
+  (el pipeline se ajusta solo sobre train). Serializa `results/models/preprocessing_pipeline.joblib`
+  y deja `data/processed/train.parquet`, `test.parquet` y `produccion.parquet` (esta última con
+  `id_fila_original` y el target vacío), más 7 tablas `prep_*.csv` y 4 figuras `prep_*.png`.
+
+Los notebooks `03`–`07` y `99_ENTREGA.ipynb` siguen siendo esqueletos con celdas de código
+marcadas `# TODO` (estructura, conectores y objetivos ya definidos, pero sin código ejecutado ni
+resultados reales todavía); `99_ENTREGA.ipynb` contiene además placeholders pendientes de
+sustituir (nombres/emails reales del grupo, tablas de resultados, reflexión final) antes de la
+entrega del 20 de julio de 2026.

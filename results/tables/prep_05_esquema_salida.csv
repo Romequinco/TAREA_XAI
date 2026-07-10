@@ -1,0 +1,15 @@
+columna,dtype
+RevolvingUtilizationOfUnsecuredLines,float64
+age,float64
+NumberOfTime30-59DaysPastDueNotWorse,float64
+DebtRatio,float64
+MonthlyIncome,float64
+NumberOfOpenCreditLinesAndLoans,float64
+NumberOfTimes90DaysLate,float64
+NumberRealEstateLoansOrLines,float64
+NumberOfTime60-89DaysPastDueNotWorse,float64
+NumberOfDependents,float64
+is_missing_monthlyincome,int8
+es_centinela_pastdue,int8
+SeriousDlqin2yrs,int64
+id_fila_original (solo prod),int64

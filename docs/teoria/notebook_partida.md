@@ -287,6 +287,21 @@ notebook original no está presente en `docs/_fuentes/`.
 
 ## 4. Qué queda pendiente de adaptar al dataset real de crédito
 
+> **Actualización (2026-07-10):** varios puntos de esta lista ya se han resuelto
+> en el repositorio (no en el material del profesor, que seguía sin cubrirlos).
+> En concreto: el **EDA del dataset real** se amplió por completo en
+> `notebooks/01_EDA.ipynb` (correlaciones, VIF, información mutua, PCA/t-SNE,
+> análisis de los valores centinela 96/98 y de outliers, y tests del patrón de
+> nulos); y el **preprocesado real** —que el notebook de partida no contenía—
+> se construyó desde cero en `notebooks/02_preprocesado.ipynb` y en el pipeline
+> serializable `src/preprocessing.py` (imputación de `MonthlyIncome` por tramo
+> de edad con flag MNAR `is_missing_monthlyincome`, recálculo de `DebtRatio`
+> como numerador/ingreso, winsorización por columna y `log1p`+`StandardScaler`
+> parametrizables mediante el flag `escalar`). La decisión de imputación quedó
+> registrada en `docs/DECISIONES.md` (D-1.1). Siguen **pendientes** el modelado,
+> el barrido de coste, el eventual entorno de RL, el subrogado, SHAP, los
+> contrafactuales y la generación de predicciones sobre `cs_produccion.csv`.
+
 - **Reescribir el pipeline completo de las secciones 3.1-3.4 sobre
   `cs_construccion.csv`/`cs_produccion.csv`**: hoy solo existe para
   `breast_cancer` (en ambos notebooks de ejercicio). Ninguno de los dos
@@ -296,12 +311,16 @@ notebook original no está presente en `docs/_fuentes/`.
 - **Tratar los nulos** de `MonthlyIncome` (19.8 %) y `NumberOfDependents`
   (2.6 %) antes de poder alimentar cualquier modelo (`RandomForestClassifier`
   y `LinearBandits` no aceptan `NaN`); no hay ninguna celda de imputación en
-  el material disponible, es una decisión de diseño a tomar (candidata a
-  registrarse en `docs/DECISIONES.md`, que hoy no cubre este punto).
+  el material del profesor, pero esta decisión de diseño ya se tomó e implementó
+  en `02_preprocesado.ipynb`/`src/preprocessing.py` (registrada en
+  `docs/DECISIONES.md`, D-1.1; ver la nota de actualización al inicio de esta
+  sección).
 - **Revisar los valores extremos** detectados en `df.describe()` (sección
   1.5: `DebtRatio` hasta `329664`, `RevolvingUtilizationOfUnsecuredLines`
   hasta `22198` pese a describirse como `percentage`, `age` con mínimo `0`) —
-  no hay tratamiento de outliers en el material del profesor.
+  no hay tratamiento de outliers en el material del profesor, pero ya se abordó
+  en `02_preprocesado.ipynb` mediante winsorización por columna y en el EDA de
+  `01_EDA.ipynb` (ver la nota de actualización al inicio de esta sección).
 - **Duplicar el barrido de umbral cost-sensitive (3.2) y/o el entorno de
   RL (3.3) para los dos escenarios de coste exigidos por el enunciado**:
   FP=FN=1 (salida `cs_produccion1.csv`) y FP=FN=10 (salida
@@ -341,10 +360,12 @@ notebook original no está presente en `docs/_fuentes/`.
   `docs/_fuentes/`, pero como ficheros brutos (el `.zip` sin descomprimir, los
   `.py` guardados como `.txt`), no como módulos importables en un entorno de
   trabajo local.
-- **Ampliar el EDA del dataset real**, hoy limitado a `describe()`, un
-  histograma de `age` y el cálculo de % de nulos (sección 2.1): faltan, por
-  ejemplo, un análisis de correlaciones, distribución de las demás variables
-  y una revisión sistemática de outliers.
+- **Ampliar el EDA del dataset real**: en el notebook de partida se limita a
+  `describe()`, un histograma de `age` y el cálculo de % de nulos (sección 2.1),
+  sin análisis de correlaciones, distribución de las demás variables ni revisión
+  sistemática de outliers. Este EDA ampliado ya se realizó en
+  `notebooks/01_EDA.ipynb` (ver la nota de actualización al inicio de esta
+  sección), por lo que este punto está resuelto.
 - Confirmar si `ejercicio2_proyecto_XAI.ipynb` es en efecto el "notebook de
   partida oficial" o solo el candidato local más cercano: el enunciado remite
   a una URL externa (ver introducción) que no se ha podido descargar en este

@@ -1,0 +1,12 @@
+metrica,valor
+n_income_no_usable,17900.0
+mediana_DebtRatio_no_usable_ANTES,1152.0
+mediana_DebtRatio_usable,0.29021557099999995
+ratio_medianas,3969.4630995522984
+umbral_p97.5_DebtRatio,3538.024999999994
+n_cola_>p97.5,2100.0
+pct_cola_que_es_income_no_usable,100.0
+mediana_DebtRatio_no_usable_DESPUES,0.2049968260685569
+ks_antes,0.9284026234163575
+ks_despues,0.16712134145826113
+n_filas_recalculadas,17900.0

@@ -1,0 +1,13 @@
+parametro,valor
+mediana_age,52.0
+mediana_income_tramo_<=30,2959.0
+mediana_income_tramo_31-40,5000.0
+mediana_income_tramo_41-50,6167.0
+mediana_income_tramo_51-60,6400.0
+mediana_income_tramo_61-70,5907.5
+mediana_income_tramo_>70,4526.0
+mediana_income_global,5460.0
+moda_dependents,0.0
+mediana_pastdue_NumberOfTime30-59DaysPastDueNotWorse,0.0
+mediana_pastdue_NumberOfTimes90DaysLate,0.0
+mediana_pastdue_NumberOfTime60-89DaysPastDueNotWorse,0.0
