@@ -217,13 +217,14 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-# --- Taller XAI crédito: datos y modelos pesados ---
+# --- Taller XAI credito: datos y artefactos (repositorio plug-and-play) ---
+# Los datos de trabajo y los artefactos que generan los notebooks (parquets,
+# modelos, predicciones, tablas y figuras) SI se versionan, para que cualquiera
+# pueda clonar el repo y ejecutar CUALQUIER notebook sin tener que regenerar
+# toda la cadena 01->02->...  Solo el material bruto privado del profesor
+# (docs/_fuentes/) queda fuera del control de versiones.
 
-# Datos: todo ignorado salvo el .gitkeep de la carpeta
-data/*
-!data/.gitkeep
-
-# Formatos de datos y modelos pesados en cualquier carpeta
+# Formatos pesados: ignorados por defecto en cualquier carpeta...
 *.csv
 *.parquet
 *.h5
@@ -231,13 +232,25 @@ data/*
 *.joblib
 *.pkl
 
-# Excepción: los entregables de predicciones de producción SÍ se versionan
-!results/predicciones/cs_produccion1.csv
-!results/predicciones/cs_produccion2.csv
+# Datos: ignora el material bruto de data/ salvo los CSV de entrada y los procesados
+data/*
+!data/.gitkeep
+!data/*.csv
+!data/processed/
+data/processed/*
+!data/processed/.gitkeep
+!data/processed/*.parquet
 
-# Excepción: tablas de resultados de análisis (EDA, etc.) SÍ se versionan
+# ...salvo los artefactos versionados del repo. Cualquier notebook (incluidos
+# 05/06/07/99) que escriba en estas carpetas queda versionado automaticamente.
+!results/models/*.joblib
+!results/predicciones/*.csv
 !results/tables/*.csv
+!results/tables/*.md
 
-# Excepción explícita (documentación, no hay regla que lo excluya): el enunciado
-# oficial de la práctica SÍ se versiona
+# Material privado del profesor (enunciado, transparencias, notebooks de ejemplo,
+# datasets originales): NO se versiona. Quien lo necesite lo consigue aparte.
+docs/_fuentes/
+
+# Excepcion: el enunciado oficial en la raiz SI se versiona
 !/taller_XAI.pdf

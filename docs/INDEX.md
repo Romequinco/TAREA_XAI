@@ -12,7 +12,16 @@ Documentación de soporte del Taller B4-T2 (XAI aplicado a concesión de crédit
   `XAI.pdf`, `AR_Multiarmed_Bandits.pdf`, `cs_construccion.csv`, `cs_produccion.csv`,
   `DataDictionary.csv`, notebooks de ejercicio del profesor incluido `ejercicio3_clustering.ipynb`
   (XAI en clustering, añadido después del inventario inicial, pendiente de revisión profunda),
-  etc. — ver `_fuentes/INVENTARIO.md` para el detalle completo).
+  etc. — ver `_fuentes/INVENTARIO.md` para el detalle completo). **Esta carpeta NO se versiona**
+  (material bruto privado del profesor); no hace falta para ejecutar los notebooks.
+
+## Repositorio plug-and-play
+
+El repositorio versiona los datos de trabajo (`data/*.csv`), los intermedios del preprocesado
+(`data/processed/*.parquet`), los modelos (`results/models/*.joblib`) y las predicciones, tablas y
+figuras de `results/`. Así, tras `pip install -r requirements.txt`, cualquiera puede clonar y
+ejecutar cualquier notebook sin regenerar la cadena anterior. Lo único fuera del control de
+versiones es `docs/_fuentes/` (privado). Ver la sección "Repositorio plug-and-play" del `README.md`.
 
 ## Teoría
 

@@ -1,0 +1,12 @@
+;Variable Name;Description;Type
+0;SeriousDlqin2yrs;Person experienced 90 days past due delinquency or worse ;Y/N
+1;RevolvingUtilizationOfUnsecuredLines;Total balance on credit cards and personal lines of credit except real estate and no installment debt like car loans divided by the sum of credit limits;percentage
+2;age;Age of borrower in years;integer
+3;NumberOfTime30-59DaysPastDueNotWorse;Number of times borrower has been 30-59 days past due but no worse in the last 2 years.;integer
+4;DebtRatio;Monthly debt payments, alimony,living costs divided by monthy gross income;percentage
+5;MonthlyIncome;Monthly income;real
+6;NumberOfOpenCreditLinesAndLoans;Number of Open loans (installment like car loan or mortgage) and Lines of credit (e.g. credit cards);integer
+7;NumberOfTimes90DaysLate;Number of times borrower has been 90 days or more past due.;integer
+8;NumberRealEstateLoansOrLines;Number of mortgage and real estate loans including home equity lines of credit;integer
+9;NumberOfTime60-89DaysPastDueNotWorse;Number of times borrower has been 60-89 days past due but no worse in the last 2 years.;integer
+10;NumberOfDependents;Number of dependents in family excluding themselves (spouse, children etc.);integer

@@ -49,7 +49,8 @@ Además de construir y optimizar el modelo, se debe auditar mediante:
 │   ├── DECISIONES.md      # Registro de decisiones (ADR-like) del proyecto
 │   ├── _fuentes/          # Material de clase y fuentes originales
 │   └── teoria/            # Notas de teoría (SHAP, contrafactuales, subrogados, etc.)
-├── data/                  # Datos del taller (no versionados, ver .gitignore)
+│       (docs/_fuentes/ NO se versiona: material bruto privado del profesor)
+├── data/                  # Datos del taller: CSV de entrada + processed/ (versionados)
 ├── notebooks/             # Notebooks de trabajo 01-07 y notebook de entrega 99_ENTREGA.ipynb
 ├── src/                   # Código fuente reutilizable
 │   ├── preprocessing.py   # Pipeline de preprocesado fit/transform (IMPLEMENTADO)
@@ -135,5 +136,22 @@ Para ejecutar un notebook de principio a fin desde la terminal, regenerando sus 
   jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=600 notebooks/02_preprocesado.ipynb
   ```
 
-Los datos reales del taller (`cs_construccion.csv`, `cs_produccion.csv`, `DataDictionary.csv`) se
-copian a `data/` desde `docs/_fuentes/` (no versionados, ver `.gitignore`).
+### Repositorio plug-and-play
+
+El repositorio se versiona de forma que **cualquiera puede clonarlo y ejecutar cualquier notebook
+sin regenerar la cadena anterior**. SÍ están versionados: los datos de entrada (`data/*.csv`), los
+intermedios del preprocesado (`data/processed/*.parquet`), los modelos (`results/models/*.joblib`),
+y las predicciones, tablas y figuras de `results/`. Así que basta con:
+
+```bash
+git clone <repo> && cd TAREA_XAI
+python -m venv .venv && .venv\Scripts\activate   # Linux/Mac: source .venv/bin/activate
+pip install -r requirements.txt
+jupyter notebook notebooks/05_auditoria_subrogado.ipynb   # p. ej., sin haber ejecutado 02-04
+```
+
+Lo ÚNICO que NO se versiona es `docs/_fuentes/`: el material bruto privado del profesor (enunciado
+en PDF, transparencias, notebooks de ejemplo y los datasets originales). Quien lo necesite debe
+conseguirlo aparte; los notebooks **no dependen de esa carpeta** para ejecutarse (leen de `data/`).
+El `.gitignore` está configurado para que los artefactos de los notebooks pendientes (`05`, `06`,
+`07`, `99`) también queden versionados automáticamente al generarse.
