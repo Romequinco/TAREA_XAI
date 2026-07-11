@@ -21,13 +21,13 @@ Se debe entrenar y optimizar un modelo de scoring de crédito en dos condiciones
 | Escenario | Coste Falso Positivo | Coste Falso Negativo | Entregable |
 |---|---|---|---|
 | 1 | 1 | 1 | `results/predicciones/cs_produccion1.csv` |
-| 2 | 10 | 10 | `results/predicciones/cs_produccion2.csv` |
+| 2 | 1 | 10 | `results/predicciones/cs_produccion2.csv` |
 
-> **Nota de interpretación.** El enunciado escribe ambos escenarios como simétricos (FP = FN). Tras
-> analizar el material de partida, el escenario 2 se interpreta como coste **asimétrico**
-> C_FN = 10·C_FP (denegar es más barato que conceder a un moroso); ver la decisión D-3.2 en
-> `docs/DECISIONES.md`. La lectura literal (FP = FN = 10) queda registrada como respaldo en
-> `results/predicciones/cs_produccion2_literal.csv`.
+> **Nota sobre el escenario 2.** La tabla del enunciado escribía ambos escenarios como simétricos
+> (FP = FN), pero **el profesor confirmó que era una errata**: el escenario 2 es coste **asimétrico**
+> C_FN = 10·C_FP (conceder a un moroso es 10× más caro que denegar a un buen cliente). Así se
+> implementa, de forma definitiva y sin ambigüedad en el código; ver la decisión D-3.2 en
+> `docs/DECISIONES.md`.
 
 Los modelos candidatos son: a) modelo supervisado, b) Multiarmed Bandit.
 
@@ -63,7 +63,7 @@ Además de construir y optimizar el modelo, se debe auditar mediante:
 │   ├── figures/           # Gráficas (incluye prep_*.png del preprocesado)
 │   ├── tables/            # Tablas de resultados (incluye prep_*.csv del preprocesado)
 │   ├── models/            # Artefactos serializados (preprocessing_pipeline.joblib)
-│   └── predicciones/      # cs_produccion1.csv y cs_produccion2.csv (entregables); cs_produccion2_literal.csv (respaldo lectura literal)
+│   └── predicciones/      # cs_produccion1.csv y cs_produccion2.csv (entregables)
 └── report/                # Material auxiliar para el informe/entrega final
 ```
 
@@ -96,8 +96,8 @@ Además de construir y optimizar el modelo, se debe auditar mediante:
   figuras `prep_*.png`). El `03` (coste simétrico) y el `04` (coste asimétrico) comparan por
   validación cruzada anti-fuga varias familias de modelos (logística, XGBoost, dos MLP Keras y un
   bandit LinUCB propio) y eligen el umbral por coste esperado; XGBoost gana en ambos escenarios.
-  Generan los dos entregables `results/predicciones/cs_produccion1.csv` y `cs_produccion2.csv`
-  (más el respaldo `cs_produccion2_literal.csv`), los modelos `modelo_coste1.joblib` /
+  Generan los dos entregables `results/predicciones/cs_produccion1.csv` y `cs_produccion2.csv`,
+  los modelos `modelo_coste1.joblib` /
   `modelo_coste10.joblib`, la tabla `results/tables/umbrales_coste.csv` y las tablas/figuras
   `mod_03_*` / `mod_04_*`. Los notebooks `05`–`07` y `99_ENTREGA.ipynb` siguen siendo esqueletos con
   celdas `# TODO` (estructura, conectores y decisiones ya definidos, código pendiente de

@@ -50,8 +50,8 @@ Pipeline de trabajo en `notebooks/`, ejecutado de forma incremental (01 → 07) 
   simétrico (C_FP = C_FN = 1), eligiendo familia y umbral por validación cruzada anti-fuga; genera
   el entregable `cs_produccion1.csv`.
 - `notebooks/04_modelo_coste10.ipynb` — mismo esquema de comparación por coste y umbral por CV
-  anti-fuga bajo el escenario asimétrico (C_FN = 10·C_FP; ver D-3.2); genera el entregable
-  `cs_produccion2.csv` y `cs_produccion2_literal.csv` (respaldo de la lectura literal del enunciado).
+  anti-fuga bajo el escenario asimétrico (C_FN = 10·C_FP, confirmado por el profesor como la lectura
+  correcta del escenario 2; ver D-3.2); genera el entregable `cs_produccion2.csv`.
 - `notebooks/05_auditoria_subrogado.ipynb` — auditoría con modelo subrogado (árbol de decisión) que
   aproxima cada modelo de caja negra y extrae reglas legibles.
 - `notebooks/06_contrafactuals.ipynb` — auditoría mediante análisis de contrafactuales sobre

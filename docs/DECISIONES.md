@@ -337,23 +337,29 @@ multicolinealidad era un artefacto de los centinelas, no estructural → los mod
   sobre los datos, sin asumir calibración perfecta.
 - **Estado:** CERRADA (2026-07-11, implementada en `src/cost_utils.py`).
 
-### D-3.2 — Interpretación del escenario de coste "10" (asimétrico vs simétrico literal)
+### D-3.2 — El escenario de coste "10" es asimétrico (errata del enunciado confirmada por el profesor)
 
 - **Fecha:** 2026-07-11
 - **Alternativas consideradas:**
   - Lectura literal del enunciado: el escenario 2 es simétrico con C_FP = C_FN = 10.
   - Lectura como ratio: el "10" es la razón C_FN:C_FP, con el falso negativo (conceder a un moroso)
     como error caro → escenario 2 asimétrico C_FN = 10·C_FP.
-- **Justificación:** el enunciado define literalmente ambos escenarios como simétricos
-  (C_FP = C_FN = 1 y C_FP = C_FN = 10). Bajo esa lectura literal el umbral óptimo **no cambia** entre
-  escenarios y los dos ficheros de predicciones serían **idénticos** (verificado: 0 filas difieren, y
-  el coste del escenario 2 es exactamente 10× el del 1). Como eso vaciaría de contenido el segundo
-  escenario, se adopta la interpretación de **ratio**: escenario 1 simétrico 1:1 y escenario 2
-  asimétrico C_FN = 10·C_FP (el falso negativo es el error caro en concesión de crédito). Bajo esa
-  lectura el umbral baja de 0.4934 a 0.0906 y **7279** solicitantes del split de producción cambian
-  de decisión. La interpretación es coherente con el material de partida de la asignatura, cuyos
-  notebooks de ejemplo usan penalizaciones **1:10 asimétricas**. Downside reconocido con honestidad:
-  si el escenario 2 se puntuara de forma literal (C_FP = C_FN = 10), la entrega asimétrica sería
-  subóptima; por eso se conserva `results/predicciones/cs_produccion2_literal.csv` (idéntico a
-  `cs_produccion1.csv`) como respaldo.
-- **Estado:** CERRADA (2026-07-11).
+- **Justificación:** la tabla del enunciado escribía ambos escenarios como simétricos
+  (C_FP = C_FN = 1 y C_FP = C_FN = 10), pero **el profesor confirmó que se trataba de una errata: el
+  escenario 2 es asimétrico**, con el falso negativo (conceder a un moroso) como error caro →
+  C_FN = 10·C_FP. Por tanto NO hay interpretación abierta: escenario 1 simétrico 1:1 y escenario 2
+  asimétrico 1:10, de forma **definitiva**. (La lectura simétrica literal se descarta; se documenta
+  solo como trazabilidad de la errata. A mayor abundamiento, era degenerada: con C_FP = C_FN = 10 el
+  umbral óptimo no cambiaba entre escenarios y los dos ficheros habrían sido idénticos —verificado: 0
+  filas difieren, coste esc.2 exactamente 10× el del esc.1—, además de incoherente con el material de
+  la asignatura, cuyos notebooks de ejemplo usan penalizaciones **1:10 asimétricas**.) Con la matriz
+  asimétrica el umbral baja de 0.4934 a 0.0906 y **7279** solicitantes del split de producción cambian
+  de decisión.
+- **Implementación sin ambigüedad:** `src/cost_utils.py` fija `COSTES_ESCENARIO_2 = (1.0, 10.0)`
+  (asimétrico) de forma explícita; no existe lógica condicional ni dependencia de la lectura literal
+  en ningún punto del código. El fichero `results/predicciones/cs_produccion2_literal.csv` (idéntico
+  a `cs_produccion1.csv`), que se conservaba como respaldo por si el escenario 2 se puntuara de forma
+  literal, **ya no cumple ninguna función tras la confirmación del profesor y se eliminó** (2026-07-11)
+  para entregar exactamente los dos ficheros que pide el enunciado.
+- **Estado:** CERRADA (2026-07-11, confirmada por el profesor: el "10" del escenario 2 es asimétrico;
+  la simetría de la tabla del enunciado era una errata).
