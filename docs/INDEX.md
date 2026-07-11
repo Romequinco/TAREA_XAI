@@ -36,10 +36,13 @@ Pipeline de trabajo en `notebooks/`, ejecutado de forma incremental (01 → 07) 
 - `notebooks/02_preprocesado.ipynb` — pipeline de preprocesado (split estratificado, imputación,
   recálculo de DebtRatio, winsorización y escalado) ajustado solo sobre train y aplicado a
   train/test/producción; serializa el pipeline y deja los `.parquet` de salida.
-- `notebooks/03_modelo_coste1.ipynb` — entrenamiento/optimización del modelo bajo el escenario de
-  coste FP = FN = 1; genera `cs_produccion1.csv`.
-- `notebooks/04_modelo_coste10.ipynb` — entrenamiento/optimización del modelo bajo el escenario de
-  coste FP = FN = 10; genera `cs_produccion2.csv`.
+- `notebooks/03_modelo_coste1.ipynb` — compara familias de modelos (lineal/logística,
+  boosted/XGBoost, neuronal/MLP Keras y bandit/LinUCB) por coste esperado bajo el escenario
+  simétrico (C_FP = C_FN = 1), eligiendo familia y umbral por validación cruzada anti-fuga; genera
+  el entregable `cs_produccion1.csv`.
+- `notebooks/04_modelo_coste10.ipynb` — mismo esquema de comparación por coste y umbral por CV
+  anti-fuga bajo el escenario asimétrico (C_FN = 10·C_FP; ver D-3.2); genera el entregable
+  `cs_produccion2.csv` y `cs_produccion2_literal.csv` (respaldo de la lectura literal del enunciado).
 - `notebooks/05_auditoria_subrogado.ipynb` — auditoría con modelo subrogado (árbol de decisión) que
   aproxima cada modelo de caja negra y extrae reglas legibles.
 - `notebooks/06_contrafactuals.ipynb` — auditoría mediante análisis de contrafactuales sobre
@@ -50,8 +53,10 @@ Pipeline de trabajo en `notebooks/`, ejecutado de forma incremental (01 → 07) 
   anteriores (portada, objetivo, datos/EDA, preprocesado, ambos modelos, tabla comparativa de
   resultados, las tres auditorías, decisiones de diseño y reflexión final).
 
-**Estado actual de los notebooks**: `notebooks/01_EDA.ipynb` y `notebooks/02_preprocesado.ipynb`
-ya NO son esqueletos: ambos están implementados y ejecutados de principio a fin sin errores.
+**Estado actual de los notebooks**: `notebooks/01_EDA.ipynb`, `notebooks/02_preprocesado.ipynb`,
+`notebooks/03_modelo_coste1.ipynb` y `notebooks/04_modelo_coste10.ipynb` ya NO son esqueletos: los
+cuatro están implementados y ejecutados de principio a fin sin errores (los dos de modelado, con 27
+celdas cada uno y sin errores de ejecución).
 
 - `01_EDA.ipynb` tiene el EDA completo (carga y validación de datos, EDA básico,
   centinelas/outliers de codificación, EDA avanzado con comparación train vs producción,
@@ -64,8 +69,17 @@ ya NO son esqueletos: ambos están implementados y ejecutados de principio a fin
   (el pipeline se ajusta solo sobre train). Serializa `results/models/preprocessing_pipeline.joblib`
   y deja `data/processed/train.parquet`, `test.parquet` y `produccion.parquet` (esta última con
   `id_fila_original` y el target vacío), más 7 tablas `prep_*.csv` y 4 figuras `prep_*.png`.
+- `03_modelo_coste1.ipynb` y `04_modelo_coste10.ipynb` comparan por validación cruzada anti-fuga
+  varias familias de modelos (logística, XGBoost, dos MLP Keras y un bandit LinUCB propio) y eligen
+  el umbral por coste esperado sobre las probabilidades OOF: XGBoost gana en ambos escenarios. El
+  `03` (simétrico, C_FP = C_FN = 1) deja un coste medio en test de 0.063 denegando el 2.4% (mejora
+  ~5% frente a conceder a todos: escenario casi trivial); el `04` (asimétrico, C_FN = 10·C_FP) deja
+  coste 0.328 denegando el 18.7% (mejora ~51%: aquí está el valor). Generan los dos entregables
+  `cs_produccion1.csv` / `cs_produccion2.csv` (más `cs_produccion2_literal.csv`), los modelos
+  `modelo_coste1.joblib` / `modelo_coste10.joblib`, la tabla `umbrales_coste.csv` (filas `coste1` y
+  `coste10`) y las tablas/figuras `mod_03_*` / `mod_04_*`.
 
-Los notebooks `03`–`07` y `99_ENTREGA.ipynb` siguen siendo esqueletos con celdas de código
+Los notebooks `05`–`07` y `99_ENTREGA.ipynb` siguen siendo esqueletos con celdas de código
 marcadas `# TODO` (estructura, conectores y objetivos ya definidos, pero sin código ejecutado ni
 resultados reales todavía); `99_ENTREGA.ipynb` contiene además placeholders pendientes de
 sustituir (nombres/emails reales del grupo, tablas de resultados, reflexión final) antes de la

@@ -378,8 +378,13 @@ explícita de los siguientes vacíos:
 
 ## 5. Relevancia para D-0.1
 
+> **Actualización (2026-07-11):** D-0.1 ya está **CERRADA** a favor del modelo
+> supervisado (XGBoost), tras comparar por coste un bandit contextual LinUCB propio
+> contra las familias supervisadas en `03_modelo_coste1.ipynb`. Ver `docs/DECISIONES.md`.
+> El resumen siguiente se conserva como el contexto que informó esa decisión.
+
 Resumen directamente utilizable para la decisión `D-0.1` (¿Modelo
-supervisado o Multiarmed Bandit?, actualmente `ABIERTA` en
+supervisado o Multiarmed Bandit?, cerrada a favor del supervisado en
 `docs/DECISIONES.md`):
 
 - **El enunciado no marca preferencia**: ambos modelos están permitidos

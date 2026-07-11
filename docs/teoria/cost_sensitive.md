@@ -360,7 +360,13 @@ deba a ruido de estimación empírica (el barrido se hace sobre un conjunto de
 test finito, sección 2.2) y no a un cambio real en la política óptima
 teórica.
 
-### 3.5 Relación con las decisiones abiertas del proyecto
+### 3.5 Relación con las decisiones del proyecto
+
+> **Actualización (2026-07-11):** D-0.1, D-0.2 y D-0.3 ya están **CERRADAS** tras
+> implementar `03_modelo_coste1.ipynb` y `04_modelo_coste10.ipynb` (modelo supervisado
+> XGBoost, un modelo con dos umbrales, umbral por validación cruzada). Ver
+> `docs/DECISIONES.md`. El texto siguiente refleja el estado cuando se redactó este
+> documento y se conserva como contexto.
 
 Esta sección conecta con tres decisiones registradas en `docs/DECISIONES.md`,
 citadas aquí solo como contexto de proyecto, no como fuente teórica:

@@ -30,7 +30,8 @@ es un correlativo dentro de ese bloque.
   - Multiarmed Bandit (aprendizaje online con exploración/explotación sobre las decisiones de concesión).
 - **Justificación:** pendiente de evidencia empírica; el enunciado admite ambas opciones (a) modelo
   supervisado, b) Multiarmed Bandit).
-- **Estado:** ABIERTA
+- **Estado:** CERRADA (2026-07-11). Se completó la comparación empírica de coste que faltaba, tras
+  implementar y ejecutar `03_modelo_coste1.ipynb` y `04_modelo_coste10.ipynb`.
 
 **Evidencia encontrada (2026-07-03):** `docs/teoria/bandits.md` (análisis de
 `AR_Multiarmed_Bandits.pdf` y de los dos notebooks de ejercicio del profesor) recoge argumentos
@@ -51,6 +52,25 @@ coste asimétrico como recompensa en vez de como umbral post-hoc. Esta evidencia
 por sí sola (sigue exigiendo la comparación empírica de coste en producción entre ambos enfoques),
 pero aporta argumentos de peso, ya documentados, a favor del modelo supervisado.
 
+**Decisión final (2026-07-11, cerrada tras `03_modelo_coste1.ipynb` y `04_modelo_coste10.ipynb`):**
+se opta por un **MODELO SUPERVISADO**. Se cerró aportando la comparación empírica de coste que
+faltaba: se implementó un **bandit contextual propio (LinUCB lineal)** y se comparó su coste medio,
+en validación cruzada y en test, contra las familias supervisadas (números verificados con
+`n_jobs=1` determinista, CV de 5 folds sobre probabilidades out-of-fold, semilla 42). Hallazgo
+matizado y honesto: a **igual paradigma lineal**, el LinUCB IGUALA o bate ligeramente a la regresión
+logística (escenario asimétrico: coste CV ≈ 0.359 del LinUCB frente a ≈ 0.351 del logit; escenario
+simétrico prácticamente empatados), de modo que el paradigma bandit **no** es en sí inferior al
+supervisado a igual familia. El ganador global es, sin embargo, **XGBoost** (coste_test asimétrico
+0.3275), que bate a todas las demás opciones por **capacidad del modelo** (árboles boosted), no por
+el paradigma: "supervisado > bandit" se sostiene por la capacidad de XGBoost, no porque el enfoque
+bandit sea peor a igual familia. A esto se suma la **auditabilidad** ya documentada en la evidencia
+previa: el supervisado es un único modelo + umbral, sin coste de exploración/regret (Lai-Robbins) ni
+feedback contrafactual que simular. Resultados del modelo elegido: escenario 1 (simétrico) coste_test
+**0.0634** (mejora 5.2% sobre conceder-todo, deniega 2.4%); escenario 2 (asimétrico) coste_test
+**0.3275** (mejora 51% sobre conceder-todo, deniega 18.7%). El escenario simétrico es casi trivial
+(conceder-todo es casi óptimo); el valor real del modelado está en el asimétrico. El bandit LinUCB
+queda **documentado como alternativa explorada** y descartada.
+
 ### D-0.2 — ¿Un solo modelo con dos umbrales/políticas de decisión, o dos modelos distintos para coste 1 y coste 10?
 
 - **Fecha:** 2026-07-03
@@ -60,7 +80,8 @@ pero aporta argumentos de peso, ya documentados, a favor del modelo supervisado.
   - Dos modelos entrenados de forma independiente, uno por escenario de coste.
 - **Justificación:** pendiente de evidencia empírica sobre si el óptimo de umbral por escenario es
   suficiente o si conviene reentrenar con sensibilidad al coste en cada caso.
-- **Estado:** ABIERTA
+- **Estado:** CERRADA (2026-07-11). Confirmado al implementar `03_modelo_coste1.ipynb` y
+  `04_modelo_coste10.ipynb`.
 
 **Evidencia encontrada (2026-07-03):** `docs/teoria/cost_sensitive.md` aporta dos elementos de
 evidencia real hacia la opción "un único modelo con dos umbrales". (1) El patrón de código de los
@@ -80,6 +101,14 @@ del primero. Esto es evidencia concreta (no solo patrón observado, sino verific
 sobre los datos reales) de que un único modelo con dos umbrales es suficiente para cubrir ambos
 escenarios de coste del taller, sin necesidad de reentrenar un modelo distinto por escenario.
 
+**Decisión final (2026-07-11, cerrada en `03_modelo_coste1.ipynb` y `04_modelo_coste10.ipynb`):**
+UN único modelo supervisado con DOS umbrales. `04` **reutiliza** el estimador XGBoost ajustado en
+`03` (las probabilidades OOF recargadas coinciden **byte a byte** con las de `03`, max|dif| = 0) y
+solo **re-optimiza el umbral** para el coste asimétrico; no se reentrena ningún modelo por escenario.
+El contraste es el bandit, que sí se reentrena por escenario porque su recompensa (= −coste) depende
+de la matriz de coste concreta. Con el modelo supervisado, cambiar solo el umbral basta para cubrir
+ambos escenarios.
+
 ### D-0.3 — Elección de familia de modelo (árboles boosted vs red neuronal vs lineal)
 
 - **Fecha:** 2026-07-03
@@ -89,7 +118,8 @@ escenarios de coste del taller, sin necesidad de reentrenar un modelo distinto p
   - Modelo lineal (regresión logística): máxima explicabilidad, posible menor rendimiento.
 - **Justificación:** pendiente de evidencia empírica sobre el trade-off rendimiento/explicabilidad
   en este dataset concreto.
-- **Estado:** ABIERTA
+- **Estado:** CERRADA (2026-07-11). Elegida por coste medio en CV(5) al implementar
+  `03_modelo_coste1.ipynb` y `04_modelo_coste10.ipynb`.
 
 **Evidencia encontrada (2026-07-04):** `notebooks/01_EDA.ipynb` (secciones 5-7) aporta varios
 indicios, ninguno concluyente por sí solo, de que las relaciones en este dataset no son puramente
@@ -119,6 +149,16 @@ el VIF máximo global baja a 1.91. Esto elimina uno de los argumentos que había
 robustos a la colinealidad (la colinealidad era un artefacto de los centinelas, no estructural).
 La decisión **sigue ABIERTA**: la elección final debe apoyarse en el rendimiento real de cada
 familia sobre los datos ya preprocesados.
+
+**Decisión final (2026-07-11, cerrada en `03_modelo_coste1.ipynb` y `04_modelo_coste10.ipynb`):**
+familia **XGBoost** (árboles boosted). Se compararon por coste medio en validación cruzada de 5
+folds cuatro familias: **lineal** (regresión logística, baseline), **boosted** (XGBoost),
+**neuronal** (dos MLP en Keras, uno pequeño y uno profundo) y **bandit** (LinUCB contextual).
+XGBoost gana en **ambos** escenarios. Matiz honesto sobre cuánto pesa la familia: en el escenario
+**simétrico** las cuatro quedan casi empatadas (gap entre familias ≈ 0.0006, del orden del ruido),
+así que ahí la familia es casi irrelevante; en el escenario **asimétrico** XGBoost bate a la
+logística por ≈ 0.033 (gap real), de modo que ahí la familia sí decide. LightGBM no llegó a
+instalarse; XGBoost cubre el rol de "boosted" entre las alternativas.
 
 ### D-1.1 — Estrategia de imputación de nulos (`MonthlyIncome`, `NumberOfDependents`)
 
@@ -248,3 +288,72 @@ multicolinealidad era un artefacto de los centinelas, no estructural → los mod
   estadísticamente esperables. Además, en producción deben conservarse siempre (hay que devolver
   45000 predicciones, una por fila). Decisión tomada por el usuario.
 - **Estado:** CERRADA (2026-07-10, decisión del usuario, aplicada en `02_preprocesado.ipynb`).
+
+### D-2.1 — Protocolo de validación anti-fuga (selección de umbral y de familia)
+
+- **Fecha:** 2026-07-11
+- **Alternativas consideradas:**
+  - Elegir el umbral de decisión y la familia de modelo directamente sobre el test donde luego se
+    reporta el coste.
+  - Elegirlos por validación cruzada sobre train (probabilidades out-of-fold) y reservar el test
+    exclusivamente para el reporte final.
+- **Justificación:** el umbral de decisión y la selección de familia se eligen por **validación
+  cruzada de 5 folds** (`StratifiedKFold`, semilla 42) sobre train, usando las probabilidades
+  **out-of-fold** (OOF); el **test se reserva SOLO** para el reporte final del coste y el split de
+  producción solo para entregar predicciones. Motivo medido: elegir el umbral sobre el mismo test
+  donde se reporta sesga el coste a la baja ≈ 0.0006–0.0009, que en el escenario simétrico es del
+  orden de la propia ventaja del modelo sobre "conceder-todo" (es decir, reportar así equivaldría a
+  engañarse). El umbral final es el **argmin del coste sobre las probas OOF concatenadas** (no la
+  mediana de los umbrales por fold). Reproducibilidad: XGBoost se ejecuta con `n_jobs=1`; con
+  `n_jobs=-1` el umbral fluctuaba según el número de hilos (no determinista). Implementado en
+  `src/modeling.py` y `src/cost_utils.py`.
+- **Estado:** CERRADA (2026-07-11, implementada en `03_modelo_coste1.ipynb` y `04_modelo_coste10.ipynb`).
+
+### D-2.2 — Modelo de producción bajo coste asimétrico
+
+- **Fecha:** 2026-07-11
+- **Alternativas consideradas:**
+  - Usar una familia de modelo distinta para el escenario asimétrico, por si la asimetría cambiara
+    el ganador de familia.
+  - Mantener el mismo modelo de producción para ambos escenarios.
+- **Justificación:** el ganador de familia **no cambia** entre escenarios (XGBoost gana tanto en el
+  simétrico como en el asimétrico, ver D-0.3), así que el modelo de producción y las auditorías
+  posteriores (`05`–`07`) usan un **único modelo** (XGBoost). Bajo asimetría la elección de familia
+  pesa más que en el simétrico, pero el ganador se mantiene, por lo que no se justifica un segundo
+  modelo de producción.
+- **Estado:** CERRADA (2026-07-11).
+
+### D-3.1 — Método de obtención del umbral (empírico vs analítico)
+
+- **Fecha:** 2026-07-11
+- **Alternativas consideradas:**
+  - Umbral analítico de la teoría de decisión: θ* = C_FP / (C_FP + C_FN).
+  - Umbral empírico: argmin del coste sobre las probabilidades OOF.
+- **Justificación:** el umbral se obtiene por **argmin empírico** del coste sobre las probas OOF, no
+  con la fórmula analítica. Resultado: umbral **simétrico 0.4934** (analítico 0.5) y **asimétrico
+  0.0906** (analítico 1/11 = 0.0909). El empírico casi coincide con el analítico porque el scoring de
+  XGBoost está razonablemente calibrado en esa banda; entre ambos umbrales el coste difiere de forma
+  despreciable (el mínimo es plano). Se prefiere el empírico por ser directamente el óptimo observado
+  sobre los datos, sin asumir calibración perfecta.
+- **Estado:** CERRADA (2026-07-11, implementada en `src/cost_utils.py`).
+
+### D-3.2 — Interpretación del escenario de coste "10" (asimétrico vs simétrico literal)
+
+- **Fecha:** 2026-07-11
+- **Alternativas consideradas:**
+  - Lectura literal del enunciado: el escenario 2 es simétrico con C_FP = C_FN = 10.
+  - Lectura como ratio: el "10" es la razón C_FN:C_FP, con el falso negativo (conceder a un moroso)
+    como error caro → escenario 2 asimétrico C_FN = 10·C_FP.
+- **Justificación:** el enunciado define literalmente ambos escenarios como simétricos
+  (C_FP = C_FN = 1 y C_FP = C_FN = 10). Bajo esa lectura literal el umbral óptimo **no cambia** entre
+  escenarios y los dos ficheros de predicciones serían **idénticos** (verificado: 0 filas difieren, y
+  el coste del escenario 2 es exactamente 10× el del 1). Como eso vaciaría de contenido el segundo
+  escenario, se adopta la interpretación de **ratio**: escenario 1 simétrico 1:1 y escenario 2
+  asimétrico C_FN = 10·C_FP (el falso negativo es el error caro en concesión de crédito). Bajo esa
+  lectura el umbral baja de 0.4934 a 0.0906 y **7279** solicitantes del split de producción cambian
+  de decisión. La interpretación es coherente con el material de partida de la asignatura, cuyos
+  notebooks de ejemplo usan penalizaciones **1:10 asimétricas**. Downside reconocido con honestidad:
+  si el escenario 2 se puntuara de forma literal (C_FP = C_FN = 10), la entrega asimétrica sería
+  subóptima; por eso se conserva `results/predicciones/cs_produccion2_literal.csv` (idéntico a
+  `cs_produccion1.csv`) como respaldo.
+- **Estado:** CERRADA (2026-07-11).
