@@ -1,22 +1,22 @@
 # Taller B4-T2 (XAI credito). Instalar con: pip install -r requirements.txt
 # Datos y manipulacion
-pandas
-numpy
-scipy
-pyarrow          # lectura/escritura de los .parquet de data/processed/
+pandas==2.3.3
+numpy==2.3.4
+scipy==1.16.3
+pyarrow==23.0.0          # lectura/escritura de los .parquet de data/processed/
 # Modelado
-scikit-learn
-xgboost
-tensorflow       # incluye Keras 3 (los MLP de src/modeling.py)
-statsmodels
+scikit-learn==1.8.0
+xgboost==3.2.0
+tensorflow==2.21.0       # incluye Keras 3 (los MLP de src/modeling.py)
+statsmodels==0.14.6
 # Explicabilidad (XAI)
-shap             # notebook 07
-dice-ml          # notebook 06
+shap==NOT_INSTALLED      # notebook 07
+dice-ml==NOT_INSTALLED   # notebook 06
 # Visualizacion y utilidades
-matplotlib
-seaborn
-joblib
-jupyter
+matplotlib==3.10.7
+seaborn==0.13.2
+joblib==1.5.3
+jupyter==1.1.1
 # Opcional: LightGBM como segundo modelo boosted. No es necesario (el codigo lo
 # detecta con try-import); descomentar solo si se quiere anadir a la comparacion.
 # lightgbm
