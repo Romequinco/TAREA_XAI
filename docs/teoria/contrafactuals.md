@@ -232,25 +232,33 @@ El enunciado pide contrafactuales para ejemplos de ambas clases reales
   que como explicación a comunicar tal cual al cliente, aunque el enunciado
   pide igualmente generarlo.
 
-### 3.4 Relación con los dos escenarios de coste del taller (FP=FN=1 y FP=FN=10)
+### 3.4 Relación con los dos escenarios de coste del taller (esc. 1 simétrico 1:1, esc. 2 asimétrico 1:10)
 
-El taller pide auditar el modelo en dos condiciones de coste: Falso
-Positivo = Falso Negativo = 1, y Falso Positivo = Falso Negativo = 10 (fuente:
-taller_XAI.pdf, apartado "1. Objetivo de la práctica"). El material de
-contrafactuales (XAI.pdf, pp. 205-219) no menciona coste ni umbrales de
-decisión — esa conexión no está en la fuente y se deja aquí solo como
-observación de aplicación práctica, no como contenido citado: el punto de
+El taller pide auditar el modelo en dos condiciones de coste. **ATENCIÓN — la
+lectura de los escenarios quedó cerrada en `docs/DECISIONES.md`, D-3.2:** el
+enunciado escribía ambos escenarios como simétricos (`C_FP=C_FN=1` y
+`C_FP=C_FN=10`), pero **el profesor confirmó que el "10" del escenario 2 es una
+errata: el escenario 2 es ASIMÉTRICO**, con `C_FN = 10·C_FP` (conceder a un
+moroso cuesta 10× más que denegar a un buen cliente). Por tanto **NO** son "el
+mismo problema a distinta escala": el escenario 1 es simétrico 1:1 y el
+escenario 2 es asimétrico 1:10.
+
+El material de contrafactuales (XAI.pdf, pp. 205-219) no menciona coste ni
+umbrales de decisión — esa conexión no está en la fuente y se deja aquí solo
+como observación de aplicación práctica, no como contenido citado: el punto de
 corte de probabilidad que separa "se concede" de "se deniega" es el que define,
 para cada solicitante concreto, si hace falta o no un contrafactual (solo lo
-necesitan quienes caen del lado de la denegación). Como ambos escenarios de
-coste del enunciado mantienen la misma proporción entre coste de Falso
-Positivo y coste de Falso Negativo (1:1 en los dos casos, solo cambia la
-magnitud absoluta), es razonable esperar que el umbral de decisión óptimo —y,
-por tanto, el conjunto de solicitantes denegados para los que hay que generar
-contrafactuales— sea similar en ambos escenarios; esto último es una
-deducción propia a partir de la definición del problema, no una afirmación
-del material de teoría, y debería verificarse empíricamente en el notebook del
-grupo (fuera del alcance de este documento, que es solo teoría).
+necesitan quienes caen del lado de la denegación). Como la proporción de coste
+**sí cambia** entre escenarios, el umbral óptimo también cambia de forma
+sustancial y, con él, el conjunto de solicitantes denegados para los que hay
+que generar contrafactuales: la evidencia empírica del modelado (nb `03`/`04`)
+fija el umbral en **0.4934** en el escenario simétrico y en **0.0906** en el
+asimétrico, y **7.279** solicitantes del split de producción cambian de
+decisión entre ambos (fuente: `docs/DECISIONES.md`, D-3.1 y D-3.2). En
+consecuencia, el análisis de contrafactuales del notebook `06` debe
+seleccionar los casos denegados **por separado en cada escenario** (los
+denegados del escenario asimétrico son muchos más y de perfil de riesgo más
+suave), en vez de asumir un único conjunto de denegados común a los dos.
 
 ### 3.5 Motivación regulatoria (breve, pp. 220-235)
 

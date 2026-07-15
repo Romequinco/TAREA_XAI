@@ -72,6 +72,10 @@ Además de construir y optimizar el modelo, se debe auditar mediante:
 - `01`–`07`: notebooks de trabajo, exploración y desarrollo incremental, uno por bloque temático:
   `01` EDA, `02` preprocesado, `03` modelo coste 1, `04` modelo coste 10, `05` auditoría subrogado,
   `06` contrafactuales, `07` SHAP.
+- `08_otras_tecnicas.ipynb`: notebook adicional (no exigido, invitado por el enunciado como "otras
+  técnicas que los estudiantes consideren oportunas") con importancia por permutación, PDP/ICE +
+  interacción 2D, LIME (contraste crítico frente a SHAP) y subgrupos por tramo de edad. Autocontenido
+  e independiente de `06`/`07`.
 - `99_ENTREGA.ipynb`: notebook único consolidado que se entrega, con el código final, la
   justificación de los desarrollos, las tablas de resultados y la reflexión final.
 
@@ -86,22 +90,28 @@ Además de construir y optimizar el modelo, se debe auditar mediante:
   único modelo con dos umbrales), D-0.3 (XGBoost), D-2.1 (validación cruzada anti-fuga), D-2.2
   (modelo de producción), D-3.1 (método del umbral) y D-3.2 (interpretación asimétrica del escenario
   2). **Ya no queda ninguna decisión de modelo o coste abierta.**
-- **Notebooks**: `01_EDA.ipynb`, `02_preprocesado.ipynb`, `03_modelo_coste1.ipynb` y
-  `04_modelo_coste10.ipynb` están completos y ejecutados de principio a fin sin errores. El `01`
-  tiene el análisis exploratorio (carga/validación, EDA básico, valores centinela y outliers, EDA
-  avanzado con comparación train/producción, correlaciones, PCA lineal y no lineal, recomendaciones
-  de nulos y normalización, conclusiones). El `02` construye el pipeline de preprocesado
-  (`src/preprocessing.py`) y deja sus artefactos: `data/processed/train.parquet`, `test.parquet` y
-  `produccion.parquet`, más `results/models/preprocessing_pipeline.joblib` (y tablas `prep_*.csv` /
-  figuras `prep_*.png`). El `03` (coste simétrico) y el `04` (coste asimétrico) comparan por
-  validación cruzada anti-fuga varias familias de modelos (logística, XGBoost, dos MLP Keras y un
-  bandit LinUCB propio) y eligen el umbral por coste esperado; XGBoost gana en ambos escenarios.
-  Generan los dos entregables `results/predicciones/cs_produccion1.csv` y `cs_produccion2.csv`,
-  los modelos `modelo_coste1.joblib` /
-  `modelo_coste10.joblib`, la tabla `results/tables/umbrales_coste.csv` y las tablas/figuras
-  `mod_03_*` / `mod_04_*`. Los notebooks `05`–`07` y `99_ENTREGA.ipynb` siguen siendo esqueletos con
-  celdas `# TODO` (estructura, conectores y decisiones ya definidos, código pendiente de
-  implementar).
+- **Notebooks**: `01_EDA.ipynb`, `02_preprocesado.ipynb`, `03_modelo_coste1.ipynb`,
+  `04_modelo_coste10.ipynb`, `05_auditoria_subrogado.ipynb` y `08_otras_tecnicas.ipynb` están
+  completos y ejecutados de principio a fin sin errores. El `01` tiene el análisis exploratorio
+  (carga/validación, EDA básico, valores centinela y outliers, EDA avanzado con comparación
+  train/producción, correlaciones, PCA lineal y no lineal, recomendaciones de nulos y normalización,
+  conclusiones). El `02` construye el pipeline de preprocesado (`src/preprocessing.py`) y deja sus
+  artefactos: `data/processed/train.parquet`, `test.parquet` y `produccion.parquet`, más
+  `results/models/preprocessing_pipeline.joblib` (y tablas `prep_*.csv` / figuras `prep_*.png`). El
+  `03` (coste simétrico) y el `04` (coste asimétrico) comparan por validación cruzada anti-fuga
+  varias familias de modelos (logística, XGBoost, dos MLP Keras y un bandit LinUCB propio) y eligen
+  el umbral por coste esperado; XGBoost gana en ambos escenarios. Generan los dos entregables
+  `results/predicciones/cs_produccion1.csv` y `cs_produccion2.csv`, los modelos `modelo_coste1.joblib`
+  / `modelo_coste10.joblib`, la tabla `results/tables/umbrales_coste.csv` y las tablas/figuras
+  `mod_03_*` / `mod_04_*`. El `05` audita ambos modelos con un árbol subrogado (barrido de
+  profundidad y peso de clase, reglas legibles traducidas a escala original, tabla de fidelidad
+  consolidada) y encuentra que el modelo tiene "dos personalidades de riesgo" según el umbral. El
+  `08` (no exigido por el enunciado) añade importancia por permutación, PDP/ICE + interacción 2D,
+  LIME (con medición de inestabilidad frente a SHAP) y subgrupos por tramo de edad; ver
+  `src/xai_utils.py` para las funciones reutilizables. Los notebooks `06`, `07` y `99_ENTREGA.ipynb`
+  siguen siendo esqueletos con celdas `# TODO` (estructura, conectores y decisiones ya definidos,
+  código pendiente de implementar), salvo la sección 11 de `99_ENTREGA.ipynb` (ya consolida los
+  resultados del `08`).
 
 ## Cómo ejecutar
 
@@ -153,5 +163,6 @@ jupyter notebook notebooks/05_auditoria_subrogado.ipynb   # p. ej., sin haber ej
 Lo ÚNICO que NO se versiona es `docs/_fuentes/`: el material bruto privado del profesor (enunciado
 en PDF, transparencias, notebooks de ejemplo y los datasets originales). Quien lo necesite debe
 conseguirlo aparte; los notebooks **no dependen de esa carpeta** para ejecutarse (leen de `data/`).
-El `.gitignore` está configurado para que los artefactos de los notebooks pendientes (`05`, `06`,
-`07`, `99`) también queden versionados automáticamente al generarse.
+El `.gitignore` está configurado para que los artefactos de los notebooks pendientes (`06`,
+`07`, `99`) también queden versionados automáticamente al generarse (`05` y `08` ya generaron los
+suyos).

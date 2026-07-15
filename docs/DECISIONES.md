@@ -363,3 +363,50 @@ multicolinealidad era un artefacto de los centinelas, no estructural → los mod
   para entregar exactamente los dos ficheros que pide el enunciado.
 - **Estado:** CERRADA (2026-07-11, confirmada por el profesor: el "10" del escenario 2 es asimétrico;
   la simetría de la tabla del enunciado era una errata).
+
+### D-8.1 — Técnicas incluidas en `notebooks/08_otras_tecnicas.ipynb`
+
+- **Fecha:** 2026-07-15
+- **Alternativas consideradas:** el enunciado (`taller_XAI.pdf`) invita a incorporar "otras técnicas
+  que los estudiantes consideren oportunas" además de las tres obligatorias (subrogado, contrafactuales,
+  SHAP). Candidatas evaluadas, todas presentes en `XAI.pdf`: importancia por permutación (p.166),
+  PDP/ICE (pp.147-165), ALE (p.165), LIME (pp.181-199), Anchors, prototipos/MMD-critic (p.212), y un
+  análisis de subgrupos por tramo de edad (motivado por la clasificación de "alto riesgo" del
+  reglamento europeo de IA, pp.231-232).
+- **Justificación:** se eligieron **cuatro** técnicas que (a) están en el propio material del profesor
+  pero no son ninguna de las tres obligatorias, y (b) generan reflexión crítica verificable con datos,
+  no solo gráficas adicionales: (1) importancia por permutación, contrastada a 3 bandas contra
+  XGBoost nativo y el subrogado de `05`; (2) PDP + ICE y un PDP 2D de interacción Edad × historial de
+  impago, que corrobora cuantitativamente (ratio ~2x) el hallazgo cualitativo de `05` ("dos
+  personalidades de riesgo"); (3) LIME local con medición explícita de inestabilidad entre
+  reejecuciones, como contraste crítico frente a SHAP; (4) subgrupos por tramo de edad, que reveló
+  que la denegación sigue la dirección del riesgo real pero no su magnitud (ratio denegación/riesgo
+  real hasta 3.5x en los más jóvenes bajo coste asimétrico). Se descartaron ALE, Anchors y
+  prototipos/MMD-critic para mantener el notebook enfocado y evitar solapamiento conceptual con las
+  técnicas ya elegidas (ALE es una variante de PDP que corrige correlación, poco aportaría aquí tras
+  el colapso del VIF por D-1.2; Anchors y MMD-critic exigen dependencias pesadas sin garantía de
+  aportar una lectura crítica adicional).
+- **Estado:** CERRADA (2026-07-15, implementada en `notebooks/08_otras_tecnicas.ipynb`).
+
+### D-8.2 — Muestreo para técnicas lentas en `notebooks/08_otras_tecnicas.ipynb`
+
+- **Fecha:** 2026-07-15
+- **Alternativas consideradas:** ejecutar PDP/ICE, permutación y LIME sobre las 21.000 filas
+  completas de `test.parquet`, frente a usar una submuestra declarada explícitamente (el propio
+  material advierte de que estas técnicas "pueden ser muy lentas de calcular", `XAI.pdf` p.204 para
+  SHAP, extensible por analogía a PDP/LIME).
+- **Justificación:** se fijó una muestra aleatoria simple de **2.000** filas (semilla 42) para PDP/ICE,
+  **3.000** filas (10 repeticiones) para la importancia por permutación, y **3 casos denegados por
+  escenario** (6 en total) para LIME, cada uno reejecutado **6 veces** con semillas de muestreo
+  distintas para medir inestabilidad. Todos los tamaños se declaran explícitamente en el notebook
+  (sección 1 y celda de configuración): no hay recortes silenciosos.
+- **Estado:** CERRADA (2026-07-15, implementada en `notebooks/08_otras_tecnicas.ipynb`).
+
+> **Nota de consistencia de numeración:** el esquema de IDs de este documento asigna el bloque `4`
+> a auditoría/XAI (ver cabecera "Formato"), pero `notebooks/05_auditoria_subrogado.ipynb` introdujo
+> internamente una decisión citada como **"D-5.1"** (complejidad del árbol y métrica de fidelidad)
+> que nunca llegó a registrarse en este fichero central. `notebooks/08_otras_tecnicas.ipynb` sigue
+> ese mismo precedente práctico (ID por número de notebook, no por bloque temático) y usa D-8.1/D-8.2
+> en vez de D-4.x. Se deja constancia aquí de la divergencia respecto al esquema declarado, sin
+> corregir retroactivamente `05` (fuera del alcance de este cambio); si el grupo quiere unificar el
+> esquema, sería el momento de registrar también D-5.1 aquí.

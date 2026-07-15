@@ -10,8 +10,39 @@ xgboost==3.2.0
 tensorflow==2.21.0       # incluye Keras 3 (los MLP de src/modeling.py)
 statsmodels==0.14.6
 # Explicabilidad (XAI)
-shap==NOT_INSTALLED      # notebook 07
-dice-ml==NOT_INSTALLED   # notebook 06
+shap==0.52.0             # notebook 07 (SHAP global/local; TreeExplainer para XGBoost)
+# OJO version de shap: 0.48.0 (la version "estandar" en la fecha de este archivo) NO
+# funciona con este XGBoost (3.2.0): xgboost>=2.x serializa "base_score" como una lista
+# stringificada (p.ej. '[6.683333E-2]') y el parser interno de shap 0.48.0 hace
+# float(base_score) directamente -> ValueError al instanciar TreeExplainer sobre
+# CUALQUIER modelo XGBoost del repo (modelo_coste1.joblib y modelo_coste10.joblib).
+# Confirmado por error real reproducido, no solo teoria. shap==0.52.0 SI parsea ese
+# formato correctamente (verificado end-to-end con TreeExplainer sobre el XGBoost real
+# de este repo). Bloqueante para notebooks/07_shap.ipynb ademas del 08.
+dice-ml==0.11            # notebook 06 (contrafactuales)
+lime==0.2.0.1            # notebook 08 (LIME local, como contraste critico frente a SHAP)
+raiutils                 # dependencia real de dice-ml (jsonschema/tqdm ya suelen estar)
+jsonschema
+tqdm
+# PDP / ICE / importancia por permutacion del notebook 08 NO necesitan paquete extra:
+# viven en sklearn.inspection (scikit-learn ya fijado arriba).
+# Opcionales del notebook 08 (descomentar solo si se usan esas tecnicas):
+# PyALE                  # graficos ALE (Accumulated Local Effects, XAI.pdf p.165)
+# alibi                  # Anchors (reglas locales if-then); dependencia pesada
+#
+# NOTA IMPORTANTE sobre dice-ml y pandas: dice-ml==0.11 declara "pandas<2.0.0" en su
+# metadata, pero ese pin es una restriccion de PyPI obsoleta (no un requisito real de
+# codigo): la libreria funciona correctamente con pandas 2.x (verificado con una
+# generacion de contrafactuales end-to-end sobre pandas 2.3.2). Instalar dice-ml con
+# --no-deps para que pip no intente downgradear pandas/numpy de todo el repo:
+#   pip install --no-deps dice-ml==0.11
+#   pip install -r requirements.txt   # el resto (incluye raiutils/jsonschema/tqdm)
+# Si se instala con pip install -r requirements.txt tal cual, pip emite un WARNING de
+# conflicto de dependencias (dice-ml requiere pandas<2.0.0) pero NO falla ni downgradea
+# nada por si solo; solo hay que evitar instalar dice-ml con su resolucion completa de
+# dependencias por separado (`pip install dice-ml==0.11` a secas SI intenta construir
+# una version antigua de pandas desde source y falla en Python 3.13 por pkg_resources
+# ausente). Ver docs/DECISIONES.md para el registro de esta decision.
 # Visualizacion y utilidades
 matplotlib==3.10.7
 seaborn==0.13.2

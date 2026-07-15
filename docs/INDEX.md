@@ -58,14 +58,21 @@ Pipeline de trabajo en `notebooks/`, ejecutado de forma incremental (01 → 07) 
   ejemplos de clase real 0 y 1, en ambos escenarios de coste.
 - `notebooks/07_shap.ipynb` — auditoría mediante análisis SHAP global y local para ambos modelos de
   coste.
-- `notebooks/99_ENTREGA.ipynb` — notebook único de entrega: consolida el trabajo de los 7 notebooks
+- `notebooks/08_otras_tecnicas.ipynb` — notebook adicional, no exigido por el enunciado (que invita
+  explícitamente a "otras técnicas que los estudiantes consideren oportunas"): importancia por
+  permutación (contrastada a 3 bandas contra XGBoost nativo y el subrogado de `05`), PDP/ICE + PDP
+  2D de interacción, LIME local con medición de inestabilidad (contraste crítico frente a SHAP), y
+  subgrupos por tramo de edad (mini-auditoría de sesgo). Autocontenido e independiente de `06`/`07`;
+  ver `src/xai_utils.py` para las funciones reutilizables y `docs/DECISIONES.md` D-8.1/D-8.2.
+- `notebooks/99_ENTREGA.ipynb` — notebook único de entrega: consolida el trabajo de los notebooks
   anteriores (portada, objetivo, datos/EDA, preprocesado, ambos modelos, tabla comparativa de
-  resultados, las tres auditorías, decisiones de diseño y reflexión final).
+  resultados, las tres auditorías obligatorias, otras técnicas del `08`, decisiones de diseño y
+  reflexión final).
 
 **Estado actual de los notebooks**: `notebooks/01_EDA.ipynb`, `notebooks/02_preprocesado.ipynb`,
-`notebooks/03_modelo_coste1.ipynb` y `notebooks/04_modelo_coste10.ipynb` ya NO son esqueletos: los
-cuatro están implementados y ejecutados de principio a fin sin errores (los dos de modelado, con 27
-celdas cada uno y sin errores de ejecución).
+`notebooks/03_modelo_coste1.ipynb`, `notebooks/04_modelo_coste10.ipynb`,
+`notebooks/05_auditoria_subrogado.ipynb` y `notebooks/08_otras_tecnicas.ipynb` ya NO son esqueletos:
+todos están implementados y ejecutados de principio a fin sin errores.
 
 - `01_EDA.ipynb` tiene el EDA completo (carga y validación de datos, EDA básico,
   centinelas/outliers de codificación, EDA avanzado con comparación train vs producción,
@@ -87,9 +94,26 @@ celdas cada uno y sin errores de ejecución).
   `cs_produccion1.csv` / `cs_produccion2.csv` (más `cs_produccion2_literal.csv`), los modelos
   `modelo_coste1.joblib` / `modelo_coste10.joblib`, la tabla `umbrales_coste.csv` (filas `coste1` y
   `coste10`) y las tablas/figuras `mod_03_*` / `mod_04_*`.
+- `05_auditoria_subrogado.ipynb` audita ambos modelos con un árbol de decisión subrogado: barrido de
+  profundidad y peso de clase (con el hallazgo de que el subrogado degenerado "conceder siempre"
+  bate en fidelidad global bruta a cualquier árbol real, por lo que la fidelidad se mide también
+  por clase), reglas de denegación traducidas a escala original (euros/años/ratios) en
+  `reglas_subrogado_coste1.md` / `_coste10.md`, y una tabla de fidelidad consolidada. Hallazgo
+  central: el modelo tiene "dos personalidades de riesgo" según qué umbral (escenario de coste) se
+  aplique.
+- `08_otras_tecnicas.ipynb` (no exigido): (1) importancia por permutación, con divergencias reales
+  entre permutación/XGBoost nativo/subrogado que se documentan como hallazgo, no se ocultan; (2) PDP
+  2D que confirma cuantitativamente (ratio ~2x) la interacción Edad × historial de impago de `05`,
+  matizando que la superficie de probabilidad es idéntica en ambos escenarios (D-0.2) y lo que
+  cambia es solo el umbral; (3) LIME reejecutado 6 veces por caso, con la variable
+  `es_centinela_pastdue` como la más inestable y 9 de 72 combinaciones cambiando de signo entre
+  ejecuciones; (4) subgrupos por edad: la denegación sigue la dirección del riesgo real pero no su
+  magnitud (ratio hasta ~3.5x en los más jóvenes bajo coste asimétrico). Ver D-8.1/D-8.2 en
+  `docs/DECISIONES.md`.
 
-Los notebooks `05`–`07` y `99_ENTREGA.ipynb` siguen siendo esqueletos con celdas de código
+Los notebooks `06`, `07` y `99_ENTREGA.ipynb` siguen siendo esqueletos con celdas de código
 marcadas `# TODO` (estructura, conectores y objetivos ya definidos, pero sin código ejecutado ni
-resultados reales todavía); `99_ENTREGA.ipynb` contiene además placeholders pendientes de
+resultados reales todavía) — salvo la sección 11 de `99_ENTREGA.ipynb`, que ya consolida los
+resultados reales del `08`; `99_ENTREGA.ipynb` contiene además placeholders pendientes de
 sustituir (nombres/emails reales del grupo, tablas de resultados, reflexión final) antes de la
 entrega del 20 de julio de 2026.
