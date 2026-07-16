@@ -1,0 +1,9 @@
+id_test,escenario,clase_real,proba_impago,umbral,decision_modelo,distancia_umbral,tipo_caso,margen_sobre_umbral,RevolvingUtilizationOfUnsecuredLines,age,NumberOfTime30-59DaysPastDueNotWorse,DebtRatio,MonthlyIncome,NumberOfOpenCreditLinesAndLoans,NumberOfTimes90DaysLate,NumberRealEstateLoansOrLines,NumberOfTime60-89DaysPastDueNotWorse,NumberOfDependents,is_missing_monthlyincome,es_centinela_pastdue
+52346,coste1,0,0.493506,0.493394,1,0.000111,borde_umbral,0.000111,1.1029,41,2,0.0832,4720.0,5,0,1,0,3,0,0
+28495,coste1,0,0.833349,0.493394,1,0.339955,denegacion_fuerte,0.339955,0.9965,62,4,0.7511,5907.5,18,3,0,4,0,1,0
+10358,coste1,1,0.493573,0.493394,1,0.000179,borde_umbral,0.000179,1.1029,65,4,0.2583,2697.0,15,0,0,0,0,0,0
+79585,coste1,1,0.916853,0.493394,1,0.423459,denegacion_fuerte,0.423459,1.0434,62,5,0.5835,2794.0,16,5,0,5,0,0,0
+19744,coste10,0,0.090614,0.090609,1,5e-06,borde_umbral,5e-06,1.0,29,0,0.5257,2200.0,4,0,1,0,1,0,0
+28495,coste10,0,0.833349,0.090609,1,0.74274,denegacion_fuerte,0.74274,0.9965,62,4,0.7511,5907.5,18,3,0,4,0,1,0
+14183,coste10,1,0.090845,0.090609,1,0.000236,borde_umbral,0.000236,0.0666,61,0,1.2834,800.0,12,1,1,0,0,0,0
+79585,coste10,1,0.916853,0.090609,1,0.826244,denegacion_fuerte,0.826244,1.0434,62,5,0.5835,2794.0,16,5,0,5,0,0,0

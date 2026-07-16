@@ -1,0 +1,9 @@
+escenario,clase_real,decision,n_casos_test
+coste1,0,conceder,19383
+coste1,0,denegar,213
+coste1,1,conceder,1118
+coste1,1,denegar,286
+coste10,0,conceder,16678
+coste10,0,denegar,2918
+coste10,1,conceder,396
+coste10,1,denegar,1008
