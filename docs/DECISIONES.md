@@ -364,6 +364,67 @@ multicolinealidad era un artefacto de los centinelas, no estructural → los mod
 - **Estado:** CERRADA (2026-07-11, confirmada por el profesor: el "10" del escenario 2 es asimétrico;
   la simetría de la tabla del enunciado era una errata).
 
+### D-5.1 — Complejidad del árbol subrogado y métrica de fidelidad
+
+- **Fecha:** 2026-07-11 (decidida en `05`); registrada aquí el 2026-07-17.
+- **Alternativas consideradas:**
+  - Fijar la profundidad del árbol a dedo vs. barrer `max_depth` y elegir por saturación.
+  - Reportar una sola métrica de fidelidad (global) vs. varias (global + por clase + F1).
+  - Reponderar la clase "denegar" (`class_weight`) de forma fija vs. barrer el peso.
+- **Justificación:** la complejidad se limita con `max_depth`, barrido {2,3,4,5,6,8,10,None} y elegido
+  por el punto donde la curva fidelidad-vs-profundidad se aplana: **`max_depth=5`** (23 hojas,
+  operativo, se audita) y **`max_depth=3`** (8 hojas, de bolsillo, para explicar al cliente). La
+  fidelidad se mide con **cuatro** métricas —global, `fid_conceder`, `fid_denegar` y `f1_denegar`—
+  porque la global es **engañosa** bajo desbalanceo: en el escenario simétrico la caja negra solo
+  deniega al 2.38 %, así que un subrogado degenerado ("conceder siempre") alcanza 97.6 % de fidelidad
+  global con 0 % en denegar. El peso de clase tiene **óptimo interior**: peso 3 en el simétrico (clase
+  rara), `sin_peso` en el asimétrico (clase frecuente, 18.7 %, el árbol replica la tasa de forma
+  natural). Resultado: F1(denegar) 0.756 (simétrico) / 0.844 (asimétrico). Hallazgo central: el modelo
+  tiene **"dos personalidades de riesgo"** según el umbral del escenario.
+- **Estado:** CERRADA (2026-07-11, implementada en `05_auditoria_subrogado.ipynb`).
+
+### D-6.1 — Herramienta para generar los contrafactuales
+
+- **Fecha:** 2026-07-15 (decidida en `06`); registrada aquí el 2026-07-17.
+- **Alternativas consideradas:**
+  - **DiCE** (`dice_ml`), librería específica de contrafactuales.
+  - Búsqueda/optimización propia sobre las variables accionables.
+- **Justificación:** se usa **DiCE** (`dice_ml`, método `random`) con un adaptador
+  (`ModeloDiCEConUmbral`) que traslada la frontera interna de DiCE (0.5) al **umbral de negocio** de
+  cada escenario (0.4934 / 0.0906), de modo que el contrafactual invierte la decisión REAL, no un 0.5
+  genérico. El material del taller no fija ninguna librería (`docs/teoria/contrafactuals.md` 2.4), así
+  que la elección es del grupo. Restricciones de accionabilidad: solo 4 variables accionables
+  (`RevolvingUtilizationOfUnsecuredLines`, `DebtRatio`, `MonthlyIncome`,
+  `NumberOfOpenCreditLinesAndLoans`), con límites de cambio proporcionados (≤ +25 % ingresos, ≤ −30 %
+  utilización/deuda, cierre de ≤ 4 líneas) y el resto inmutable (edad, historial de mora, dependientes,
+  flags). Cada contrafactual se valida además contra el modelo con su umbral real.
+- **Estado:** CERRADA (2026-07-15, implementada en `06_contrafactuals.ipynb`).
+
+### D-6.2 — Número de ejemplos de contrafactuales por clase real y escenario
+
+- **Fecha:** 2026-07-15 (decidida en `06`); registrada aquí el 2026-07-17.
+- **Alternativas consideradas:** cuántos casos por clase real (0/1) y por escenario (coste1/coste10)
+  analizar; el enunciado pide "varios ejemplos" sin fijar cantidad.
+- **Justificación:** **2 casos por clase real y por escenario → 8 casos**; en cada par, uno de tipo
+  `borde_umbral` (proba más próxima al umbral) y uno de `denegacion_fuerte` (proba más alta), para
+  cubrir el caso fácil de invertir y el difícil. Hallazgo: DiCE encuentra contrafactual plausible sobre
+  todo en los casos de borde; en las 4 denegaciones fuertes no hay alternativa accionable bajo las
+  restricciones (registrado con honestidad, no ocultado). Se obtienen 2 CF plausibles en coste1 y 1 en
+  coste10; la diferencia procede del umbral más bajo (más conservador), no de un modelo distinto (D-0.2).
+- **Estado:** CERRADA (2026-07-15, implementada en `06_contrafactuals.ipynb`).
+
+### D-7.1 — Número de ejemplos para SHAP local
+
+- **Fecha:** 2026-07-15 (decidida en `07`); registrada aquí el 2026-07-17.
+- **Alternativas consideradas:** qué instancias usar para las explicaciones SHAP locales.
+- **Justificación:** se usan los **mismos casos que `06`** (`results/tables/contrafactuals_ejemplos.csv`),
+  4 por escenario, para poder contrastar la explicación SHAP local y el contrafactual sobre las mismas
+  instancias. Explainer: **`TreeExplainer`** (D-0.3). Hallazgo: las atribuciones SHAP (global y local)
+  son **idénticas** entre escenarios porque comparten el mismo XGBoost (D-0.2); lo único que cambia es
+  el umbral que convierte el score en decisión. El cotejo numérico fino **LIME-vs-SHAP** sobre estos
+  casos se completa en `99_ENTREGA.ipynb`.
+- **Estado:** CERRADA (2026-07-15, implementada en `07_shap.ipynb`).
+
 ### D-8.1 — Técnicas incluidas en `notebooks/08_otras_tecnicas.ipynb`
 
 - **Fecha:** 2026-07-15
@@ -402,11 +463,9 @@ multicolinealidad era un artefacto de los centinelas, no estructural → los mod
   (sección 1 y celda de configuración): no hay recortes silenciosos.
 - **Estado:** CERRADA (2026-07-15, implementada en `notebooks/08_otras_tecnicas.ipynb`).
 
-> **Nota de consistencia de numeración:** el esquema de IDs de este documento asigna el bloque `4`
-> a auditoría/XAI (ver cabecera "Formato"), pero `notebooks/05_auditoria_subrogado.ipynb` introdujo
-> internamente una decisión citada como **"D-5.1"** (complejidad del árbol y métrica de fidelidad)
-> que nunca llegó a registrarse en este fichero central. `notebooks/08_otras_tecnicas.ipynb` sigue
-> ese mismo precedente práctico (ID por número de notebook, no por bloque temático) y usa D-8.1/D-8.2
-> en vez de D-4.x. Se deja constancia aquí de la divergencia respecto al esquema declarado, sin
-> corregir retroactivamente `05` (fuera del alcance de este cambio); si el grupo quiere unificar el
-> esquema, sería el momento de registrar también D-5.1 aquí.
+> **Nota de consistencia de numeración:** la cabecera "Formato" asigna el bloque `4` a auditoría/XAI,
+> pero los notebooks de auditoría adoptaron el convenio práctico de numerar sus decisiones por **número
+> de notebook** (D-5.x para `05`, D-6.x para `06`, D-7.x para `07`, D-8.x para `08`) en vez de por
+> bloque temático (D-4.x). Se mantiene ese convenio por coherencia con lo ya escrito en los notebooks.
+> Desde el 2026-07-17 todas esas decisiones están registradas aquí (D-5.1, D-6.1, D-6.2, D-7.1, D-8.1,
+> D-8.2), por lo que el fichero central ya no tiene decisiones de notebook sin registrar.

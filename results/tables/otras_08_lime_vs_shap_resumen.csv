@@ -1,0 +1,7 @@
+﻿escenario,idx_caso,lime_std_media,lime_std_max,var_mas_inestable_lime,shap_std,spearman_abs_lime_shap,top1_lime,top1_shap,top1_coincide,n_signo_coincide,n_vars
+coste1,3665,0.005677649526329233,0.0306419731340996,Centinela mora (flag),0.0,0.5174825174825175,N. impagos 90+ dias,N. impagos 90+ dias,True,10,12
+coste1,11076,0.005462957898519149,0.0308446863860017,Centinela mora (flag),0.0,0.6013986013986015,N. impagos 90+ dias,N. impagos 90+ dias,True,12,12
+coste1,19825,0.005618205050424492,0.0327093638135059,Centinela mora (flag),0.0,0.31468531468531474,N. impagos 90+ dias,Utilizacion de credito revolving,False,11,12
+coste10,976,0.005705693068925815,0.0356680815872456,Centinela mora (flag),0.0,0.5524475524475525,N. impagos 90+ dias,Utilizacion de credito revolving,False,11,12
+coste10,14834,0.0055184368539709,0.0297234826923128,Centinela mora (flag),0.0,0.5244755244755246,N. impagos 90+ dias,N. moras 60-89 dias,False,10,12
+coste10,17133,0.005754225833356841,0.0335310902356974,Centinela mora (flag),0.0,0.4265734265734266,N. impagos 90+ dias,N. moras 30-59 dias,False,11,12

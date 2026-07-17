@@ -56,7 +56,7 @@ Además de construir y optimizar el modelo, se debe auditar mediante:
 │   ├── preprocessing.py   # Pipeline de preprocesado fit/transform (IMPLEMENTADO)
 │   ├── modeling.py        # Familias de modelos (lineal/boosted/neuronal/bandit) y comparación por CV (IMPLEMENTADO)
 │   ├── cost_utils.py      # Matrices de coste, coste esperado, optimización de umbral (IMPLEMENTADO)
-│   └── xai_utils.py       # Wrappers de SHAP, modelo subrogado y contrafactuales (stub, pendiente)
+│   └── xai_utils.py       # Helpers XAI (permutación, PDP 1D/2D, LIME, subgrupos por edad, inverse-transform) — usados por 08 (IMPLEMENTADO)
 ├── data/
 │   └── processed/         # Salidas del preprocesado: train/test/produccion.parquet (generados)
 ├── results/               # Resultados generados
@@ -90,28 +90,32 @@ Además de construir y optimizar el modelo, se debe auditar mediante:
   único modelo con dos umbrales), D-0.3 (XGBoost), D-2.1 (validación cruzada anti-fuga), D-2.2
   (modelo de producción), D-3.1 (método del umbral) y D-3.2 (interpretación asimétrica del escenario
   2). **Ya no queda ninguna decisión de modelo o coste abierta.**
-- **Notebooks**: `01_EDA.ipynb`, `02_preprocesado.ipynb`, `03_modelo_coste1.ipynb`,
-  `04_modelo_coste10.ipynb`, `05_auditoria_subrogado.ipynb` y `08_otras_tecnicas.ipynb` están
-  completos y ejecutados de principio a fin sin errores. El `01` tiene el análisis exploratorio
-  (carga/validación, EDA básico, valores centinela y outliers, EDA avanzado con comparación
-  train/producción, correlaciones, PCA lineal y no lineal, recomendaciones de nulos y normalización,
-  conclusiones). El `02` construye el pipeline de preprocesado (`src/preprocessing.py`) y deja sus
-  artefactos: `data/processed/train.parquet`, `test.parquet` y `produccion.parquet`, más
-  `results/models/preprocessing_pipeline.joblib` (y tablas `prep_*.csv` / figuras `prep_*.png`). El
-  `03` (coste simétrico) y el `04` (coste asimétrico) comparan por validación cruzada anti-fuga
-  varias familias de modelos (logística, XGBoost, dos MLP Keras y un bandit LinUCB propio) y eligen
-  el umbral por coste esperado; XGBoost gana en ambos escenarios. Generan los dos entregables
-  `results/predicciones/cs_produccion1.csv` y `cs_produccion2.csv`, los modelos `modelo_coste1.joblib`
-  / `modelo_coste10.joblib`, la tabla `results/tables/umbrales_coste.csv` y las tablas/figuras
-  `mod_03_*` / `mod_04_*`. El `05` audita ambos modelos con un árbol subrogado (barrido de
-  profundidad y peso de clase, reglas legibles traducidas a escala original, tabla de fidelidad
-  consolidada) y encuentra que el modelo tiene "dos personalidades de riesgo" según el umbral. El
-  `08` (no exigido por el enunciado) añade importancia por permutación, PDP/ICE + interacción 2D,
-  LIME (con medición de inestabilidad frente a SHAP) y subgrupos por tramo de edad; ver
-  `src/xai_utils.py` para las funciones reutilizables. Los notebooks `06`, `07` y `99_ENTREGA.ipynb`
-  siguen siendo esqueletos con celdas `# TODO` (estructura, conectores y decisiones ya definidos,
-  código pendiente de implementar), salvo la sección 11 de `99_ENTREGA.ipynb` (ya consolida los
-  resultados del `08`).
+- **Notebooks**: los **ocho notebooks de trabajo `01`–`08` están completos y ejecutados de principio
+  a fin sin errores**. El `01` tiene el análisis exploratorio (carga/validación, EDA básico, valores
+  centinela y outliers, EDA avanzado con comparación train/producción, correlaciones, PCA lineal y no
+  lineal, recomendaciones de nulos y normalización, conclusiones). El `02` construye el pipeline de
+  preprocesado (`src/preprocessing.py`) y deja sus artefactos: `data/processed/train.parquet`,
+  `test.parquet` y `produccion.parquet`, más `results/models/preprocessing_pipeline.joblib` (y tablas
+  `prep_*.csv` / figuras `prep_*.png`). El `03` (coste simétrico) y el `04` (coste asimétrico) comparan
+  por validación cruzada anti-fuga varias familias de modelos (logística, XGBoost, dos MLP Keras y un
+  bandit LinUCB propio) y eligen el umbral por coste esperado; XGBoost gana en ambos escenarios. Generan
+  los dos entregables `results/predicciones/cs_produccion1.csv` y `cs_produccion2.csv`, los modelos
+  `modelo_coste1.joblib` / `modelo_coste10.joblib`, la tabla `results/tables/umbrales_coste.csv` y las
+  tablas/figuras `mod_03_*` / `mod_04_*`. El `05` audita ambos modelos con un árbol subrogado (barrido
+  de profundidad y peso de clase, reglas legibles traducidas a escala original, tabla de fidelidad
+  consolidada) y encuentra que el modelo tiene "dos personalidades de riesgo" según el umbral. El `06`
+  genera **contrafactuales con DiCE** (2 casos por clase real y escenario, validación de plausibilidad y
+  explicación no técnica al cliente); artefactos `contrafactuals_ejemplos.csv` y
+  `contrafactuals_*.png`. El `07` calcula **SHAP** con `TreeExplainer` (summary global + waterfall
+  locales sobre los mismos casos del `06`); artefactos `shap_values_global.csv`, `shap_summary_*.png`,
+  `shap_local_*.png`. El `08` (no exigido por el enunciado) añade importancia por permutación, PDP/ICE +
+  interacción 2D, LIME (con medición de inestabilidad frente a SHAP) y subgrupos por tramo de edad; ver
+  `src/xai_utils.py` para las funciones reutilizables. Las decisiones internas de estos notebooks
+  (D-5.1, D-6.1, D-6.2, D-7.1, D-8.1, D-8.2) están registradas en `docs/DECISIONES.md`.
+- **Pendiente**: solo el **`99_ENTREGA.ipynb`** (notebook único de entrega). Su sección 11 ya consolida
+  los resultados del `08`; el resto de secciones (portada con datos del grupo, EDA, preprocesado, ambos
+  modelos, tabla comparativa, las tres auditorías, decisiones y reflexión final) están pendientes de
+  consolidar a partir de los artefactos ya generados por `01`–`08`.
 
 ## Cómo ejecutar
 

@@ -69,10 +69,9 @@ Pipeline de trabajo en `notebooks/`, ejecutado de forma incremental (01 → 07) 
   resultados, las tres auditorías obligatorias, otras técnicas del `08`, decisiones de diseño y
   reflexión final).
 
-**Estado actual de los notebooks**: `notebooks/01_EDA.ipynb`, `notebooks/02_preprocesado.ipynb`,
-`notebooks/03_modelo_coste1.ipynb`, `notebooks/04_modelo_coste10.ipynb`,
-`notebooks/05_auditoria_subrogado.ipynb` y `notebooks/08_otras_tecnicas.ipynb` ya NO son esqueletos:
-todos están implementados y ejecutados de principio a fin sin errores.
+**Estado actual de los notebooks**: los **ocho notebooks de trabajo `01`–`08` están implementados y
+ejecutados de principio a fin sin errores** (incluidos `06_contrafactuals.ipynb` y `07_shap.ipynb`).
+El único pendiente es `99_ENTREGA.ipynb` (consolidación de la entrega).
 
 - `01_EDA.ipynb` tiene el EDA completo (carga y validación de datos, EDA básico,
   centinelas/outliers de codificación, EDA avanzado con comparación train vs producción,
@@ -101,6 +100,19 @@ todos están implementados y ejecutados de principio a fin sin errores.
   `reglas_subrogado_coste1.md` / `_coste10.md`, y una tabla de fidelidad consolidada. Hallazgo
   central: el modelo tiene "dos personalidades de riesgo" según qué umbral (escenario de coste) se
   aplique.
+- `06_contrafactuals.ipynb` genera **contrafactuales con DiCE** para 2 casos por clase real (0/1) y por
+  escenario (8 casos), con un adaptador que fija la frontera de DiCE al umbral de negocio de cada
+  escenario, validación de plausibilidad (rangos, inmutables fijas, decisión invertida) y traducción a
+  una explicación no técnica para el cliente. Artefactos: `contrafactuals_ejemplos.csv`,
+  `contrafactuals_casos_seleccionados.csv` y `contrafactuals_probabilidad_original_vs_cf.png`. Hallazgo:
+  hay contrafactual accionable sobre todo en los casos de borde; las denegaciones fuertes no lo tienen
+  bajo restricciones realistas (registrado con honestidad). Ver D-6.1/D-6.2 en `DECISIONES.md`.
+- `07_shap.ipynb` calcula **SHAP** con `TreeExplainer` sobre el XGBoost: importancia global (summary
+  plots) y explicaciones locales (waterfall) sobre los mismos casos del `06`. Artefactos:
+  `shap_values_global.csv`, `shap_summary_coste1.png` / `_coste10.png` y `shap_local_*.png`. Hallazgo:
+  las atribuciones SHAP son **idénticas** entre escenarios (mismo modelo, D-0.2); lo único que cambia es
+  el umbral que traduce el score en decisión. `RevolvingUtilizationOfUnsecuredLines` domina la
+  importancia global, seguida del historial de mora y la edad. Ver D-7.1 en `DECISIONES.md`.
 - `08_otras_tecnicas.ipynb` (no exigido): (1) importancia por permutación, con divergencias reales
   entre permutación/XGBoost nativo/subrogado que se documentan como hallazgo, no se ocultan; (2) PDP
   2D que confirma cuantitativamente (ratio ~2x) la interacción Edad × historial de impago de `05`,
@@ -111,9 +123,8 @@ todos están implementados y ejecutados de principio a fin sin errores.
   magnitud (ratio hasta ~3.5x en los más jóvenes bajo coste asimétrico). Ver D-8.1/D-8.2 en
   `docs/DECISIONES.md`.
 
-Los notebooks `06`, `07` y `99_ENTREGA.ipynb` siguen siendo esqueletos con celdas de código
-marcadas `# TODO` (estructura, conectores y objetivos ya definidos, pero sin código ejecutado ni
-resultados reales todavía) — salvo la sección 11 de `99_ENTREGA.ipynb`, que ya consolida los
-resultados reales del `08`; `99_ENTREGA.ipynb` contiene además placeholders pendientes de
-sustituir (nombres/emails reales del grupo, tablas de resultados, reflexión final) antes de la
-entrega del 20 de julio de 2026.
+El único notebook pendiente es `99_ENTREGA.ipynb` (notebook único de entrega). Su sección 11 ya
+consolida los resultados reales del `08`; el resto de secciones (portada con nombres/emails reales del
+grupo, EDA, preprocesado, ambos modelos, tabla comparativa de resultados, las tres auditorías
+obligatorias, decisiones y reflexión final) están pendientes de consolidar a partir de los artefactos
+ya generados por `01`–`08`, antes de la entrega del 20 de julio de 2026.
