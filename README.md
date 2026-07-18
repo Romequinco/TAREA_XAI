@@ -8,11 +8,18 @@ El objetivo de la práctica es **construir, auditar y optimizar un modelo de con
 bajo dos escenarios de coste distintos, y justificar las decisiones de negocio con técnicas de
 explicabilidad (XAI).
 
+La entrega consta del notebook único **`99_ENTREGA.ipynb`** (autocontenido, con el código real que
+genera cada resultado) y de un informe de entrega disponible en **tres formatos**: el informe visual
+autocontenido (`report/informe_visual.html` y su versión `report/informe_visual.pdf`) y el informe
+técnico-académico en LaTeX (`report/Informe_Tecnico_XAI_Credito.tex`, con sus figuras en
+`report/figuras/`), cuyo PDF compilado está en la raíz del repositorio como
+`Informe_Tecnico_XAI_Credito.pdf` para acceso directo.
+
 ## Grupo
 
-- Nombre 1 (apellidos, email)
-- Nombre 2 (apellidos, email)
-- Nombre 3 (apellidos, email)
+- Oscar Romero Quincoces
+- Fernando Dapena Tauste
+- Daniel Garcia Lopez
 
 ## Objetivo
 
@@ -44,27 +51,32 @@ Además de construir y optimizar el modelo, se debe auditar mediante:
 ## Estructura del repositorio
 
 ```
+├── Informe_Tecnico_XAI_Credito.pdf  # PDF del informe técnico-académico (en la raíz, junto al README)
 ├── docs/                  # Documentación de teoría, fuentes y decisiones de proyecto
 │   ├── INDEX.md           # Índice de la documentación
 │   ├── DECISIONES.md      # Registro de decisiones (ADR-like) del proyecto
+│   ├── taller_XAI.pdf     # Enunciado del taller (referencia del proyecto)
 │   ├── _fuentes/          # Material de clase y fuentes originales
 │   └── teoria/            # Notas de teoría (SHAP, contrafactuales, subrogados, etc.)
 │       (docs/_fuentes/ NO se versiona: material bruto privado del profesor)
 ├── data/                  # Datos del taller: CSV de entrada + processed/ (versionados)
-├── notebooks/             # Notebooks de trabajo 01-07 y notebook de entrega 99_ENTREGA.ipynb
+│   └── processed/         # Salidas del preprocesado: train/test/produccion.parquet (generados)
+├── notebooks/             # Notebooks de trabajo 01-08 y notebook de entrega 99_ENTREGA.ipynb
 ├── src/                   # Código fuente reutilizable
 │   ├── preprocessing.py   # Pipeline de preprocesado fit/transform (IMPLEMENTADO)
 │   ├── modeling.py        # Familias de modelos (lineal/boosted/neuronal/bandit) y comparación por CV (IMPLEMENTADO)
 │   ├── cost_utils.py      # Matrices de coste, coste esperado, optimización de umbral (IMPLEMENTADO)
 │   └── xai_utils.py       # Helpers XAI (permutación, PDP 1D/2D, LIME, subgrupos por edad, inverse-transform) — usados por 08 (IMPLEMENTADO)
-├── data/
-│   └── processed/         # Salidas del preprocesado: train/test/produccion.parquet (generados)
 ├── results/               # Resultados generados
 │   ├── figures/           # Gráficas (incluye prep_*.png del preprocesado)
 │   ├── tables/            # Tablas de resultados (incluye prep_*.csv del preprocesado)
-│   ├── models/            # Artefactos serializados (preprocessing_pipeline.joblib)
+│   ├── models/            # Artefactos serializados: preprocessing_pipeline.joblib, modelo_coste1.joblib, modelo_coste10.joblib
 │   └── predicciones/      # cs_produccion1.csv y cs_produccion2.csv (entregables)
-└── report/                # Material auxiliar para el informe/entrega final
+└── report/                # Informe de entrega
+    ├── informe_visual.html            # Informe visual autocontenido (HTML)
+    ├── informe_visual.pdf             # El mismo informe visual en PDF
+    ├── Informe_Tecnico_XAI_Credito.tex # Informe técnico-académico en LaTeX
+    └── figuras/                       # Figuras del informe técnico
 ```
 
 ### Convención de notebooks
@@ -76,8 +88,11 @@ Además de construir y optimizar el modelo, se debe auditar mediante:
   técnicas que los estudiantes consideren oportunas") con importancia por permutación, PDP/ICE +
   interacción 2D, LIME (contraste crítico frente a SHAP) y subgrupos por tramo de edad. Autocontenido
   e independiente de `06`/`07`.
-- `99_ENTREGA.ipynb`: notebook único consolidado que se entrega, con el código final, la
-  justificación de los desarrollos, las tablas de resultados y la reflexión final.
+- `99_ENTREGA.ipynb`: notebook único consolidado que se entrega, **ya completo y ejecutado sin
+  errores** (123 celdas, 13 secciones). Cada sección incorpora el **código real ejecutable**
+  (extraído de `src/` y de los notebooks `01`–`08`) que produce sus resultados, además de las
+  figuras, las tablas y la narrativa. Es autocontenido: puede ejecutarse y leerse **sin el resto
+  del repositorio**.
 
 ## Estado actual
 
@@ -112,10 +127,16 @@ Además de construir y optimizar el modelo, se debe auditar mediante:
   interacción 2D, LIME (con medición de inestabilidad frente a SHAP) y subgrupos por tramo de edad; ver
   `src/xai_utils.py` para las funciones reutilizables. Las decisiones internas de estos notebooks
   (D-5.1, D-6.1, D-6.2, D-7.1, D-8.1, D-8.2) están registradas en `docs/DECISIONES.md`.
-- **Pendiente**: solo el **`99_ENTREGA.ipynb`** (notebook único de entrega). Su sección 11 ya consolida
-  los resultados del `08`; el resto de secciones (portada con datos del grupo, EDA, preprocesado, ambos
-  modelos, tabla comparativa, las tres auditorías, decisiones y reflexión final) están pendientes de
-  consolidar a partir de los artefactos ya generados por `01`–`08`.
+- **Entrega**: el **`99_ENTREGA.ipynb`** (notebook único de entrega) está **completo y ejecutado de
+  principio a fin sin errores** (123 celdas, 13 secciones): portada con datos del grupo, EDA,
+  preprocesado, ambos modelos, tabla comparativa, las tres auditorías (subrogado, contrafactuales,
+  SHAP), otras técnicas, decisiones y reflexión final. La novedad importante es que **cada sección
+  incorpora el código real ejecutable** (extraído de `src/` y de los notebooks `01`–`08`) que genera
+  sus resultados, junto con las figuras, tablas y la narrativa. Es **autocontenido**: el profesor
+  puede ejecutarlo y leerlo **sin necesidad del resto del repositorio**. El informe de entrega
+  acompaña al notebook en tres formatos: `report/informe_visual.html`, `report/informe_visual.pdf`
+  y el informe técnico en LaTeX `report/Informe_Tecnico_XAI_Credito.tex` (PDF compilado en la raíz,
+  `Informe_Tecnico_XAI_Credito.pdf`). **No queda nada pendiente.**
 
 ## Cómo ejecutar
 
@@ -164,9 +185,8 @@ pip install -r requirements.txt
 jupyter notebook notebooks/05_auditoria_subrogado.ipynb   # p. ej., sin haber ejecutado 02-04
 ```
 
-Lo ÚNICO que NO se versiona es `docs/_fuentes/`: el material bruto privado del profesor (enunciado
-en PDF, transparencias, notebooks de ejemplo y los datasets originales). Quien lo necesite debe
+Lo ÚNICO que NO se versiona es `docs/_fuentes/`: el material bruto privado del profesor
+(transparencias, notebooks de ejemplo y los datasets originales). Quien lo necesite debe
 conseguirlo aparte; los notebooks **no dependen de esa carpeta** para ejecutarse (leen de `data/`).
-El `.gitignore` está configurado para que los artefactos de los notebooks pendientes (`06`,
-`07`, `99`) también queden versionados automáticamente al generarse (`05` y `08` ya generaron los
-suyos).
+Todos los artefactos generados por los notebooks `01`–`08` y por el `99_ENTREGA.ipynb` quedan
+versionados en `results/`, de modo que el repositorio es reproducible de principio a fin.

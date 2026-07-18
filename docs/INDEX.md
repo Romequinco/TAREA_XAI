@@ -8,8 +8,10 @@ Documentación de soporte del Taller B4-T2 (XAI aplicado a concesión de crédit
 
 ## Fuentes
 
-- `_fuentes/` — material de clase, enunciado y notebook de partida del profesor (`taller_XAI.pdf`,
-  `XAI.pdf`, `AR_Multiarmed_Bandits.pdf`, `cs_construccion.csv`, `cs_produccion.csv`,
+- El **enunciado del taller** sí está versionado como `docs/taller_XAI.pdf` (referencia del proyecto,
+  accesible a cualquiera que clone el repositorio).
+- `_fuentes/` — resto del material de clase y notebook de partida del profesor (`XAI.pdf`,
+  `AR_Multiarmed_Bandits.pdf`, `cs_construccion.csv`, `cs_produccion.csv`,
   `DataDictionary.csv`, notebooks de ejercicio del profesor incluido `ejercicio3_clustering.ipynb`
   (XAI en clustering, añadido después del inventario inicial, pendiente de revisión profunda),
   etc. — ver `_fuentes/INVENTARIO.md` para el detalle completo). **Esta carpeta NO se versiona**
@@ -22,6 +24,16 @@ El repositorio versiona los datos de trabajo (`data/*.csv`), los intermedios del
 figuras de `results/`. Así, tras `pip install -r requirements.txt`, cualquiera puede clonar y
 ejecutar cualquier notebook sin regenerar la cadena anterior. Lo único fuera del control de
 versiones es `docs/_fuentes/` (privado). Ver la sección "Repositorio plug-and-play" del `README.md`.
+
+## Informe de entrega
+
+El informe final se entrega en **tres formatos** complementarios:
+
+- `report/informe_visual.html` — informe visual autocontenido (HTML).
+- `report/informe_visual.pdf` — el mismo informe visual exportado a PDF.
+- `report/Informe_Tecnico_XAI_Credito.tex` — informe técnico-académico en LaTeX (sus figuras están en
+  `report/figuras/`); su PDF compilado es `Informe_Tecnico_XAI_Credito.pdf`, ubicado en la **raíz** del
+  repositorio junto al `README.md`.
 
 ## Teoría
 
@@ -36,7 +48,7 @@ Notas de teoría de soporte para la auditoría del modelo. Ya redactadas:
 
 ## Notebooks
 
-Pipeline de trabajo en `notebooks/`, ejecutado de forma incremental (01 → 07) y consolidado en un
+Pipeline de trabajo en `notebooks/`, ejecutado de forma incremental (01 → 08) y consolidado en un
 único notebook de entrega (`99_ENTREGA.ipynb`). Cada notebook documenta en su propia celda
 "Conectores" qué recibe del notebook anterior y qué entrega al siguiente.
 
@@ -64,14 +76,18 @@ Pipeline de trabajo en `notebooks/`, ejecutado de forma incremental (01 → 07) 
   2D de interacción, LIME local con medición de inestabilidad (contraste crítico frente a SHAP), y
   subgrupos por tramo de edad (mini-auditoría de sesgo). Autocontenido e independiente de `06`/`07`;
   ver `src/xai_utils.py` para las funciones reutilizables y `docs/DECISIONES.md` D-8.1/D-8.2.
-- `notebooks/99_ENTREGA.ipynb` — notebook único de entrega: consolida el trabajo de los notebooks
-  anteriores (portada, objetivo, datos/EDA, preprocesado, ambos modelos, tabla comparativa de
-  resultados, las tres auditorías obligatorias, otras técnicas del `08`, decisiones de diseño y
-  reflexión final).
+- `notebooks/99_ENTREGA.ipynb` — **notebook único de entrega, COMPLETO y ejecutado sin errores**
+  (123 celdas, 13 secciones): consolida el trabajo de los notebooks `01`–`08` (portada, objetivo,
+  datos/EDA, preprocesado, ambos modelos, tabla comparativa de resultados, las tres auditorías
+  obligatorias, otras técnicas del `08`, decisiones de diseño y reflexión final). Novedad: cada
+  sección integra ahora el **código real ejecutable** (extraído de `src/` y de los notebooks
+  `01`–`08`) que produce sus resultados, además de las figuras, tablas y narrativa, de modo que el
+  notebook es **autocontenido**: se puede ejecutar y leer sin el resto del repositorio.
 
 **Estado actual de los notebooks**: los **ocho notebooks de trabajo `01`–`08` están implementados y
-ejecutados de principio a fin sin errores** (incluidos `06_contrafactuals.ipynb` y `07_shap.ipynb`).
-El único pendiente es `99_ENTREGA.ipynb` (consolidación de la entrega).
+ejecutados de principio a fin sin errores** (incluidos `06_contrafactuals.ipynb` y `07_shap.ipynb`), y
+el **`99_ENTREGA.ipynb` también está COMPLETO y ejecutado sin errores**. El proyecto está, por tanto,
+finalizado.
 
 - `01_EDA.ipynb` tiene el EDA completo (carga y validación de datos, EDA básico,
   centinelas/outliers de codificación, EDA avanzado con comparación train vs producción,
@@ -90,7 +106,7 @@ El único pendiente es `99_ENTREGA.ipynb` (consolidación de la entrega).
   `03` (simétrico, C_FP = C_FN = 1) deja un coste medio en test de 0.063 denegando el 2.4% (mejora
   ~5% frente a conceder a todos: escenario casi trivial); el `04` (asimétrico, C_FN = 10·C_FP) deja
   coste 0.328 denegando el 18.7% (mejora ~51%: aquí está el valor). Generan los dos entregables
-  `cs_produccion1.csv` / `cs_produccion2.csv` (más `cs_produccion2_literal.csv`), los modelos
+  `cs_produccion1.csv` (simétrico) / `cs_produccion2.csv` (asimétrico), los modelos
   `modelo_coste1.joblib` / `modelo_coste10.joblib`, la tabla `umbrales_coste.csv` (filas `coste1` y
   `coste10`) y las tablas/figuras `mod_03_*` / `mod_04_*`.
 - `05_auditoria_subrogado.ipynb` audita ambos modelos con un árbol de decisión subrogado: barrido de
@@ -123,8 +139,10 @@ El único pendiente es `99_ENTREGA.ipynb` (consolidación de la entrega).
   magnitud (ratio hasta ~3.5x en los más jóvenes bajo coste asimétrico). Ver D-8.1/D-8.2 en
   `docs/DECISIONES.md`.
 
-El único notebook pendiente es `99_ENTREGA.ipynb` (notebook único de entrega). Su sección 11 ya
-consolida los resultados reales del `08`; el resto de secciones (portada con nombres/emails reales del
-grupo, EDA, preprocesado, ambos modelos, tabla comparativa de resultados, las tres auditorías
-obligatorias, decisiones y reflexión final) están pendientes de consolidar a partir de los artefactos
-ya generados por `01`–`08`, antes de la entrega del 20 de julio de 2026.
+El `99_ENTREGA.ipynb` (notebook único de entrega) está **COMPLETO y ejecutado sin errores** (123
+celdas, 13 secciones). Consolida todo el trabajo de `01`–`08`: portada con los nombres del grupo
+(Oscar Romero Quincoces, Fernando Dapena Tauste, Daniel García López), objetivo, EDA, preprocesado,
+ambos modelos, tabla comparativa de resultados, las tres auditorías obligatorias, otras técnicas del
+`08`, decisiones y reflexión final. Cada sección integra además el **código real ejecutable** que
+genera sus resultados, por lo que el notebook es autocontenido y puede leerse y ejecutarse sin el resto
+del repositorio.
